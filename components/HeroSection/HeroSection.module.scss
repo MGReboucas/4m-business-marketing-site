@@ -1,0 +1,140 @@
+.heroSection {
+  padding: 10rem 0 6rem;
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 50%, #1e3a8a 100%);
+  color: white;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+
+  .bgDecoration {
+    position: absolute;
+    inset: 0;
+    opacity: 0.1;
+
+    .circle1 {
+      position: absolute;
+      top: 5rem;
+      left: 2.5rem;
+      width: 18rem;
+      height: 18rem;
+      background: white;
+      border-radius: 50%;
+      filter: blur(80px);
+    }
+
+    .circle2 {
+      position: absolute;
+      bottom: 5rem;
+      right: 2.5rem;
+      width: 24rem;
+      height: 24rem;
+      background: #93c5fd;
+      border-radius: 50%;
+      filter: blur(80px);
+    }
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    text-align: center;
+    position: relative;
+    z-index: 10;
+    width: 100%;
+
+    @media (min-width: 768px) {
+      padding: 0 2rem;
+    }
+  }
+
+  .title {
+    font-size: 1.875rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    line-height: 1.3;
+    max-width: 80rem;
+    margin-left: auto;
+    margin-right: auto;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+
+    @media (min-width: 640px) {
+      font-size: 2.25rem;
+    }
+
+    @media (min-width: 768px) {
+      font-size: 3rem;
+    }
+
+    @media (min-width: 1024px) {
+      font-size: 3.75rem;
+    }
+  }
+
+  .subtitle {
+    font-size: 1.125rem;
+    margin-bottom: 3rem;
+    max-width: 56rem;
+    margin-left: auto;
+    margin-right: auto;
+    color: #dbeafe;
+    line-height: 1.75;
+
+    @media (min-width: 768px) {
+      font-size: 1.25rem;
+    }
+
+    @media (min-width: 1024px) {
+      font-size: 1.5rem;
+    }
+  }
+
+  .ctaButtons {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    justify-content: center;
+    align-items: center;
+
+    @media (min-width: 768px) {
+      flex-direction: row;
+    }
+  }
+
+  .btnPrimary {
+    background: white;
+    color: #2563eb;
+    padding: 1.25rem 2.5rem;
+    border-radius: 9999px;
+    font-weight: bold;
+    font-size: 1.125rem;
+    text-decoration: none;
+    transition: all 0.3s;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+    &:hover {
+      background: #dbeafe;
+      transform: scale(1.05);
+    }
+  }
+
+  .btnSecondary {
+    border: 2px solid white;
+    color: white;
+    padding: 1.25rem 2.5rem;
+    border-radius: 9999px;
+    font-weight: bold;
+    font-size: 1.125rem;
+    background: none;
+    cursor: pointer;
+    transition: all 0.3s;
+
+    &:hover {
+      background: white;
+      color: #2563eb;
+      transform: scale(1.05);
+    }
+  }
+}

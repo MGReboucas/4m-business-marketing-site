@@ -1,0 +1,169 @@
+.main {
+  padding-top: 6rem;
+}
+
+.hero {
+  padding: 5rem 0;
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  color: white;
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    text-align: center;
+  }
+
+  .title {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+
+    @media (min-width: 768px) {
+      font-size: 3.75rem;
+    }
+  }
+
+  .subtitle {
+    font-size: 1.25rem;
+    max-width: 48rem;
+    margin: 0 auto;
+    color: #dbeafe;
+  }
+}
+
+.quemSomos {
+  padding: 5rem 0;
+  background: white;
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  .content {
+    max-width: 56rem;
+    margin: 0 auto;
+  }
+
+  .sectionTitle {
+    font-size: 2.25rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    color: #1f2937;
+  }
+
+  .paragraph {
+    font-size: 1.125rem;
+    color: #374151;
+    margin-bottom: 1.5rem;
+    line-height: 1.75;
+  }
+}
+
+.mvv {
+  padding: 5rem 0;
+  background: #f9fafb;
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  .grid {
+    display: grid;
+    gap: 2rem;
+
+    @media (min-width: 768px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .card {
+    background: white;
+    padding: 2rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+    .emoji {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .cardTitle {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      color: #1f2937;
+    }
+
+    .cardText {
+      color: #374151;
+    }
+
+    .valuesList {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 0.5rem;
+
+        .checkmark {
+          color: #2563eb;
+          margin-right: 0.5rem;
+        }
+
+        span {
+          color: #374151;
+        }
+      }
+    }
+  }
+}
+
+.cta {
+  padding: 5rem 0;
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  color: white;
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    text-align: center;
+  }
+
+  .ctaTitle {
+    font-size: 2.25rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+  }
+
+  .ctaText {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+    color: #dbeafe;
+  }
+
+  .ctaButton {
+    display: inline-block;
+    background: white;
+    color: #2563eb;
+    padding: 1rem 2.5rem;
+    border-radius: 9999px;
+    font-weight: bold;
+    font-size: 1.125rem;
+    text-decoration: none;
+    transition: all 0.3s;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      background: #eff6ff;
+    }
+  }
+}
