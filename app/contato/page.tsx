@@ -55,21 +55,39 @@ export default function Contato() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
+    setSubmitStatus('idle')
 
-    setTimeout(() => {
-      setIsSubmitting(false)
-      setSubmitStatus('success')
-      setFormData({
-        nome: '',
-        empresa: '',
-        telefone: '',
-        email: '',
-        servico: '',
-        mensagem: '',
+    try {
+      const response = await fetch('/api/contato', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       })
 
+      if (response.ok) {
+        setSubmitStatus('success')
+        setFormData({
+          nome: '',
+          empresa: '',
+          telefone: '',
+          email: '',
+          servico: '',
+          mensagem: '',
+        })
+        setTimeout(() => setSubmitStatus('idle'), 5000)
+      } else {
+        setSubmitStatus('error')
+        setTimeout(() => setSubmitStatus('idle'), 5000)
+      }
+    } catch (error) {
+      console.error('Erro ao enviar formulário:', error)
+      setSubmitStatus('error')
       setTimeout(() => setSubmitStatus('idle'), 5000)
-    }, 1500)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
