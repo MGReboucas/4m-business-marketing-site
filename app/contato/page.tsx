@@ -15,10 +15,21 @@ export default function Contato() {
     mensagem: '',
   })
 
+  const contacts = {
+    email: '4mbusinessmarketing@gmail.com',
+    whatsapp: '+55 84 99804-5201',
+  }
+
+  const linkWatsapp = `https://wa.me/${contacts.whatsapp.replace(
+    /[^0-9]/g,
+    '',
+  )}?text=${encodeURIComponent('Olá, venho pelo site oficial da empresa')}`
+
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<
     'idle' | 'success' | 'error'
   >('idle')
+  const [emailCopied, setEmailCopied] = useState(false)
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -29,6 +40,16 @@ export default function Contato() {
       ...formData,
       [e.target.name]: e.target.value,
     })
+  }
+
+  const handleCopyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(contacts.email)
+      setEmailCopied(true)
+      setTimeout(() => setEmailCopied(false), 2000)
+    } catch (err) {
+      console.error('Erro ao copiar email:', err)
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -211,13 +232,32 @@ export default function Contato() {
                 <div className={styles.infoCards}>
                   <div className={styles.infoCard}>
                     <span className={styles.infoLabel}>📧 E-mail: </span>
-                    <span className={styles.infoValue}>
-                      contato@4mbusiness.com
-                    </span>
+                    <button
+                      onClick={handleCopyEmail}
+                      className={styles.infoValue}
+                      style={{
+                        cursor: 'pointer',
+                        background: 'none',
+                        border: 'none',
+                        padding: 0,
+                        color: 'inherit',
+                        font: 'inherit',
+                      }}
+                      title="Clique para copiar"
+                    >
+                      {contacts.email} {emailCopied && '✓ Copiado!'}
+                    </button>
                   </div>
                   <div className={styles.infoCard}>
                     <span className={styles.infoLabel}>📱 WhatsApp: </span>
-                    <span className={styles.infoValue}>(00) 00000-0000</span>
+                    <a
+                      href={linkWatsapp}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles.infoValue}
+                    >
+                      {contacts.whatsapp}
+                    </a>
                   </div>
                 </div>
               </div>
