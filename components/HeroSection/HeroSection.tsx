@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import Link from 'next/link'
 import styles from './HeroSection.module.scss'
@@ -13,6 +13,17 @@ export default function HeroSection() {
       <div className={styles.bgDecoration}>
         <div className={styles.circle1}></div>
         <div className={styles.circle2}></div>
+      </div>
+
+      <p className={styles.titleVideo}>Assista o video abaixo:</p>
+      <div className={styles.heroVideo}>
+        <iframe
+          src="https://www.youtube.com/embed/rjPFZlyTonc?rel=0&modestbranding=1&playsinline=1&autoplay=1"
+          title="Video 4M Business & Marketing"
+          frameBorder="0"
+          allow="autoplay; encrypted-media; gyroscope;"
+          allowFullScreen
+        />
       </div>
 
       <div className={styles.container}>
@@ -30,14 +41,14 @@ export default function HeroSection() {
 
         <div className={styles.ctaButtons}>
           <Link href="/contato" className={styles.btnPrimary}>
-            Solicitar Diagnóstico Gratuito
+            Preencher Formulário
           </Link>
 
           <button
             onClick={() => scrollToSection('servicos')}
             className={styles.btnSecondary}
           >
-            Conheça Nossas Soluções
+            Lei do incentivo ao esporte
           </button>
         </div>
       </div>
