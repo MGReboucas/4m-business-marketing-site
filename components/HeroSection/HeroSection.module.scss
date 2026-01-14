@@ -1,5 +1,5 @@
 ﻿.heroSection {
-  padding: 10rem 0 6rem;
+  padding: 14rem 0 6rem;
   background: linear-gradient(135deg, #2563eb 0%, #1e40af 50%, #1e3a8a 100%);
   color: white;
   display: flex;
@@ -8,6 +8,10 @@
   justify-content: center;
   overflow: hidden;
   width: 100%;
+
+  @media screen and (min-width: 1024px) {
+    padding: 15rem 0rem 10rem 6rem;
+  }
 
   .bgDecoration {
     position: absolute;

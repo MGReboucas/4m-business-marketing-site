@@ -63,7 +63,7 @@ export default function Header() {
               onClick={() => scrollToSection('processo')}
               className={styles.navLink}
             >
-              Como Trabalhamos
+              Lei do incentivo
             </button>
           </li>
           <li>
@@ -111,7 +111,7 @@ export default function Header() {
             onClick={() => scrollToSection('processo')}
             className={styles.mobileLink}
           >
-            Como Trabalhamos
+            Lei do incentivo
           </button>
           <Link
             href="/sobre"

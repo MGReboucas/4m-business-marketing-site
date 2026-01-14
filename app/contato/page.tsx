@@ -100,9 +100,8 @@ export default function Contato() {
               Vamos levar sua empresa para o próximo nível?
             </h1>
             <p className={styles.subtitle}>
-              Preencha o formulário abaixo e fale com a equipe da 4M Business &
-              Marketing. Nosso time irá analisar sua necessidade e apresentar a
-              melhor solução para o seu negócio.
+              Preencha o formulário abaixo que a equipe da 4M Business &
+              Marketing irá falar com você em até 24 horas.
             </p>
           </div>
         </section>
@@ -123,13 +122,29 @@ export default function Contato() {
                     onChange={handleChange}
                     required
                     className={styles.input}
-                    placeholder="Seu nome completo"
+                    placeholder="Nome e sobrenome"
                   />
                 </div>
 
                 <div className={styles.formGroup}>
                   <label htmlFor="empresa" className={styles.label}>
-                    Empresa *
+                    Qual o Email da sua empresa? *
+                  </label>
+                  <input
+                    type="text"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className={styles.input}
+                    placeholder="Digite o e-mail corporativo"
+                  />
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label htmlFor="empresa" className={styles.label}>
+                    Qual o nome da sua empresa?
                   </label>
                   <input
                     type="text"
@@ -139,47 +154,29 @@ export default function Contato() {
                     onChange={handleChange}
                     required
                     className={styles.input}
-                    placeholder="Nome da sua empresa"
+                    placeholder="Nome da empresa"
                   />
                 </div>
 
-                <div className={styles.gridTwo}>
-                  <div className={styles.formGroup}>
-                    <label htmlFor="telefone" className={styles.label}>
-                      Telefone / WhatsApp *
-                    </label>
-                    <input
-                      type="tel"
-                      id="telefone"
-                      name="telefone"
-                      value={formData.telefone}
-                      onChange={handleChange}
-                      required
-                      className={styles.input}
-                      placeholder="(00) 00000-0000"
-                    />
-                  </div>
-
-                  <div className={styles.formGroup}>
-                    <label htmlFor="email" className={styles.label}>
-                      E-mail *
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                      className={styles.input}
-                      placeholder="seu@email.com"
-                    />
-                  </div>
+                <div className={styles.formGroup}>
+                  <label htmlFor="telefone" className={styles.label}>
+                    Telefone / WhatsApp *
+                  </label>
+                  <input
+                    type="tel"
+                    id="telefone"
+                    name="telefone"
+                    value={formData.telefone}
+                    onChange={handleChange}
+                    required
+                    className={styles.input}
+                    placeholder="(00) 00000-0000"
+                  />
                 </div>
 
                 <div className={styles.formGroup}>
                   <label htmlFor="servico" className={styles.label}>
-                    Serviço de Interesse
+                    Qual o faturamento mensal da sua empresa? *
                   </label>
                   <select
                     id="servico"
@@ -188,19 +185,27 @@ export default function Contato() {
                     onChange={handleChange}
                     className={styles.select}
                   >
-                    <option value="">Selecione um serviço</option>
-                    <option value="marketing-digital">
-                      Marketing Digital Estratégico
+                    <option value="">Busque o valor</option>
+                    <option value="zinquenta-mil">Até 50 mil</option>
+                    <option value="cinquenta-setenta-mil">
+                      De 51 mil a 70 mil
                     </option>
-                    <option value="producao-conteudo">
-                      Produção de Conteúdo Profissional
+                    <option value="setenta-cem-mil">De 71 mil a 100 mil</option>
+                    <option value="cem-mais">101 mil a 200 mil</option>
+                    <option value="duzentos-mais">201 mil a 400 mil</option>
+                    <option value="quatrocentos-mais">
+                      401 mil a 1 milhão
                     </option>
-                    <option value="marketing-urbano">
-                      Marketing Urbano e Mídias Físicas
+                    <option value="um-milhao-mais">De 1 a 4 milhões</option>
+                    <option value="quatro-milhoes-mais">
+                      De 4 a 16 milhões
                     </option>
-                    <option value="tecnologia">Tecnologia e Programação</option>
-                    <option value="consultoria">Consultoria Geral</option>
-                    <option value="outro">Outro</option>
+                    <option value="quatro-milhoes-mais">
+                      De 16 a 40 milhões
+                    </option>
+                    <option value="quatro-milhoes-mais">
+                      Mais de 40 milhões
+                    </option>
                   </select>
                 </div>
 
@@ -215,7 +220,7 @@ export default function Contato() {
                     onChange={handleChange}
                     rows={5}
                     className={styles.textarea}
-                    placeholder="Conte-nos um pouco mais sobre sua necessidade..."
+                    placeholder="Qual o seu segmento? Quais são seus principais desafios? Como podemos ajudar?"
                   />
                 </div>
 

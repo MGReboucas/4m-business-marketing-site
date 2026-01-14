@@ -1,12 +1,13 @@
 .section {
   padding: 5rem 0;
-  background: #f9fafb;
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 50%, #1e3a8a 100%);
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1rem;
+  text-align: center;
 }
 
 .title {
@@ -14,10 +15,44 @@
   font-weight: bold;
   text-align: center;
   margin-bottom: 4rem;
-  color: #1f2937;
+  color: #fff;
 
   @media (min-width: 768px) {
     font-size: 3rem;
+  }
+}
+
+.description {
+  max-width: 900px;
+  margin: 0 auto 3.5rem;
+  text-align: center;
+  color: #dbeafe;
+  line-height: 1.8;
+  font-size: 1.125rem;
+
+  @media (min-width: 768px) {
+    font-size: 1.25rem;
+  }
+}
+
+.videoWrapper {
+  text-align: center;
+  z-index: 10;
+  margin-bottom: 3rem;
+}
+
+.videoWrapper iframe {
+    width: 350px;
+    height: 199px;
+    border-radius: 12px;
+
+  @media (min-width: 640px) {
+    height: 450px;
+  }
+
+  @media (min-width: 1024px) {
+    width: 889px;
+      height: 500px;
   }
 }
 
@@ -68,6 +103,23 @@
   margin: 0 auto 1.5rem;
   box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.4);
 }
+
+.btnPrimary {
+    background: white;
+    color: #2563eb;
+    padding: 1.25rem 2.5rem;
+    border-radius: 9999px;
+    font-weight: bold;
+    font-size: 1.125rem;
+    text-decoration: none;
+    transition: all 0.3s;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+    &:hover {
+      background: #dbeafe;
+      transform: scale(1.05);
+    }
+  }
 
 .stepTitle {
   font-size: 1.25rem;

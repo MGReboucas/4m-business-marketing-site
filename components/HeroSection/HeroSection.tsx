@@ -15,7 +15,7 @@ export default function HeroSection() {
         <div className={styles.circle2}></div>
       </div>
 
-      <p className={styles.titleVideo}>Assista o video abaixo:</p>
+      <p className={styles.titleVideo}>Assista o vídeo abaixo:</p>
       <div className={styles.heroVideo}>
         <iframe
           src="https://www.youtube.com/embed/rjPFZlyTonc?rel=0&modestbranding=1&playsinline=1&autoplay=1"
@@ -45,7 +45,7 @@ export default function HeroSection() {
           </Link>
 
           <button
-            onClick={() => scrollToSection('servicos')}
+            onClick={() => scrollToSection('processo')}
             className={styles.btnSecondary}
           >
             Lei do incentivo ao esporte
