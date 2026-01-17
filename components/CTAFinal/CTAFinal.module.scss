@@ -61,6 +61,27 @@
   line-height: 1.75;
 }
 
+.videoWrapper {
+  text-align: center;
+  z-index: 10;
+  margin-bottom: 3rem;
+}
+
+.videoWrapper iframe {
+  width: 350px;
+  height: 199px;
+  border-radius: 12px;
+
+  @media (min-width: 640px) {
+    height: 450px;
+  }
+
+  @media (min-width: 1024px) {
+    width: 889px;
+    height: 500px;
+  }
+}
+
 .btn {
   display: inline-block;
   background: white;
