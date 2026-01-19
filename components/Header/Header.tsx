@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import styles from './Header.module.scss'
-import logo from '../../public/foto-sem-fundo.png'
+import logo from '../../public/4m-business.png'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -60,6 +60,14 @@ export default function Header() {
           </li>
           <li>
             <button
+              onClick={() => scrollToSection('podcast')}
+              className={styles.navLink}
+            >
+              Podcast
+            </button>
+          </li>
+          <li>
+            <button
               onClick={() => scrollToSection('processo')}
               className={styles.navLink}
             >
@@ -106,6 +114,12 @@ export default function Header() {
             className={styles.mobileLink}
           >
             Serviços
+          </button>
+          <button
+            onClick={() => scrollToSection('podcast')}
+            className={styles.mobileLink}
+          >
+            Podcast
           </button>
           <button
             onClick={() => scrollToSection('processo')}

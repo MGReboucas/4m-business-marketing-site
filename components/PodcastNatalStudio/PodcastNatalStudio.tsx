@@ -3,7 +3,7 @@ import podcastNatalStudio from '../../public/podcast-natal-studio.jpg'
 
 export default function PodcastNatalStudio() {
   return (
-    <section className={styles.section}>
+    <section id="podcast" className={styles.section}>
       <div className={styles.container}>
         <div className={styles.grid}>
           <div className={styles.text}>

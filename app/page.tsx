@@ -6,7 +6,7 @@ import Servicos from '@/components/Servicos/Servicos'
 import Processo from '@/components/Processo/Processo'
 import ParaQuem from '@/components/ParaQuem/ParaQuem'
 import Autoridade from '@/components/Autoridade/Autoridade'
-import CTAFinal from '@/components/CTAFinal/CTAFinal'
+import PesquisaMercado from '@/components/PesquisaMercado/CTAFinal'
 import PodcastNatalStudio from '@/components/PodcastNatalStudio/PodcastNatalStudio'
 
 export default function Home() {
@@ -16,12 +16,12 @@ export default function Home() {
       <main>
         <HeroSection />
         <PropostaValor />
-        <Servicos />
+        <PesquisaMercado />
         <PodcastNatalStudio />
+        <Servicos />
         <Processo />
         <ParaQuem />
         <Autoridade />
-        <CTAFinal />
       </main>
       <Footer />
     </>
