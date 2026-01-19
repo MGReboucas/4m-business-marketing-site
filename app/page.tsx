@@ -7,6 +7,7 @@ import Processo from '@/components/Processo/Processo'
 import ParaQuem from '@/components/ParaQuem/ParaQuem'
 import Autoridade from '@/components/Autoridade/Autoridade'
 import CTAFinal from '@/components/CTAFinal/CTAFinal'
+import PodcastNatalStudio from '@/components/PodcastNatalStudio/PodcastNatalStudio'
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
         <HeroSection />
         <PropostaValor />
         <Servicos />
+        <PodcastNatalStudio />
         <Processo />
         <ParaQuem />
         <Autoridade />
