@@ -72,7 +72,8 @@
 }
 
 .btnContact {
-  background: linear-gradient(to right, #2563eb, #1e40af);
+  border: 2px solid #2563eb;
+  background: transparent;
   color: white;
   padding: 0.75rem 2rem;
   border-radius: 9999px;
@@ -80,9 +81,39 @@
   text-decoration: none;
   transition: all 0.3s;
   box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3);
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, #2563eb, #1e40af);
+    z-index: -2;
+    border-radius: inherit;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 0%;
+    background: white;
+    z-index: -1;
+    transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: inherit;
+  }
+
+  &:hover::before {
+    height: 100%;
+  }
 
   &:hover {
     transform: scale(1.05);
+    color: #2563eb;
     box-shadow: 0 6px 8px rgba(37, 99, 235, 0.4);
   }
 }
@@ -132,7 +163,8 @@
 
 .mobileBtnContact {
   display: block;
-  background: linear-gradient(to right, #2563eb, #1e40af);
+  border: 2px solid #2563eb;
+  background: transparent;
   color: white;
   padding: 0.75rem 1.5rem;
   border-radius: 9999px;
@@ -141,8 +173,38 @@
   text-decoration: none;
   margin-top: 0.5rem;
   transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, #2563eb, #1e40af);
+    z-index: -2;
+    border-radius: inherit;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 0%;
+    background: white;
+    z-index: -1;
+    transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: inherit;
+  }
+
+  &:hover::before {
+    height: 100%;
+  }
 
   &:hover {
+    color: #2563eb;
     box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3);
   }
 }

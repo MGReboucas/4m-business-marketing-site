@@ -1,7 +1,24 @@
 import styles from './PodcastNatalStudio.module.scss'
-import podcastNatalStudio from '../../public/podcast-natal-studio.jpg'
+import PodcastNatalStudioSlider from './PodcastNatalStudioSlider'
+import fs from 'fs'
+import path from 'path'
+
+const getPodcastImages = () => {
+  const podcastDir = path.join(process.cwd(), 'public', 'podcast')
+  try {
+    return fs
+      .readdirSync(podcastDir)
+      .filter((file) => /\.(png|jpe?g|webp|avif)$/i.test(file))
+      .map((file) => `/podcast/${file}`)
+  } catch {
+    return []
+  }
+}
 
 export default function PodcastNatalStudio() {
+  const images = getPodcastImages()
+  const slides = images.length > 0 ? images : ['/podcast/podcast-natal-studio.jpg']
+
   return (
     <section id="podcast" className={styles.section}>
       <div className={styles.container}>
@@ -27,11 +44,7 @@ export default function PodcastNatalStudio() {
             </a>
           </div>
           <div className={styles.imageWrapper}>
-            <img
-              src={podcastNatalStudio.src}
-              alt="Espaco Podcast Natal Studio"
-              className={styles.image}
-            />
+            <PodcastNatalStudioSlider images={slides} intervalMs={4000} />
           </div>
         </div>
       </div>

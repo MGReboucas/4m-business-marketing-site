@@ -46,7 +46,7 @@ export default function HeroSection() {
 
           <button
             onClick={() => scrollToSection('processo')}
-            className={styles.btnSecondary}
+            className={styles.btnPrimary}
           >
             Lei do incentivo ao esporte
           </button>
