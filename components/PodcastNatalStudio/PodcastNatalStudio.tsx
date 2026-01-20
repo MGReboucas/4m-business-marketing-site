@@ -34,14 +34,16 @@ export default function PodcastNatalStudio() {
               Um ambiente completo para gravações, entrevistas e conteúdos com
               qualidade de áudio e vídeo.
             </p>
-            <a
-              href="https://podcast-natal-form.vercel.app/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.ctaButton}
-            >
-              Agendar gravação
-            </a>
+            <div className={styles.ctaButtonWrap}>
+              <a
+                href="https://podcast-natal-form.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.ctaButton}
+              >
+                Agendar gravação
+              </a>
+            </div>
           </div>
           <div className={styles.imageWrapper}>
             <PodcastNatalStudioSlider images={slides} intervalMs={4000} />

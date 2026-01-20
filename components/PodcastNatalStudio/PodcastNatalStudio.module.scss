@@ -18,6 +18,10 @@
     @media (min-width: 900px) {
       grid-template-columns: 1.1fr 0.9fr;
     }
+
+    @media (max-width: 640px) {
+      justify-items: center;
+    }
   }
 
   .eyebrow {
@@ -44,6 +48,11 @@
 
   .paragraph:last-child {
     margin-bottom: 0;
+  }
+
+  .ctaButtonWrap {
+    display: flex;
+    justify-content: flex-start;
   }
 
   .ctaButton {
@@ -88,6 +97,13 @@
       box-shadow: 0 16px 30px -16px rgba(37, 99, 235, 0.8);
       transition: 1s;
     }
+
+  }
+
+  @media (max-width: 640px) {
+    .ctaButtonWrap {
+      justify-content: center;
+    }
   }
 
   .imageWrapper {
@@ -102,6 +118,15 @@
       opacity: 1;
       transform: translateY(-50%) scale(1);
       pointer-events: auto;
+    }
+
+    @media (max-width: 640px) {
+      width: min(300px, 94vw);
+      max-width: 300px;
+      margin: 0 auto;
+      min-height: 0;
+      aspect-ratio: 4 / 3;
+      justify-self: center;
     }
   }
 
