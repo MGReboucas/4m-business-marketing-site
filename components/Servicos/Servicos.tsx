@@ -90,7 +90,7 @@ export default function Servicos() {
     },
     {
       title: 'Marketing Urbano e Mídias Físicas',
-      description: 'Sua marca presente onde o público está: na cidade.',
+      description: 'Sua marca presente onde o público está na cidade.',
       items: [
         'Placas publicitárias',
         'Adesivagem de fachadas e veículos',

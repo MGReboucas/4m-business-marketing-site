@@ -22,10 +22,10 @@ export default function Processo() {
           A Lei no 11.438/06 (Lei de Incentivo ao Esporte) alterada pela lei
           complementar 222/2025 permite direcionar parte do imposto devido para
           projetos esportivos e paradesportivos que transformam vidas em todo o
-          Brasil. Sua empresa apoia criancas, jovens, pessoas com deficiencia e
+          Brasil. Sua empresa apoia crianças, jovens, pessoas com deficiência e
           idosos, e ainda fortalece sua marca com impacto social real. Com a 4M,
-          alem de contribuir para a inclusao, voce ganha visibilidade e
-          posicionamento estrategico: nos cuidamos do projeto e entregamos
+          além de contribuir para a inclusão, você ganha visibilidade e
+          posicionamento estratégico, nós cuidamos do projeto e entregamos
           marketing de alto potencial para sua empresa.
         </p>
         <Link href="/contato" className={styles.btnPrimary}>

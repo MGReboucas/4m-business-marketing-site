@@ -34,7 +34,7 @@ export default function HeroSection() {
 
         <p className={styles.subtitle}>
           A 4M Business & Marketing auxilia empresas a aumentarem sua
-          visibilidade, fortalecerem sua marca e conquistarem mais clientes por
+          visibilidade, fortalecerem sua marca a conquistarem mais clientes por
           meio de estratégias integradas de marketing digital, mídia física e
           soluções tecnológicas.
         </p>

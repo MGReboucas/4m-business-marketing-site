@@ -5,11 +5,13 @@ export default function CTAFinal() {
   return (
     <section className={styles.section}>
       <div className={styles.container}>
-        <h2 className={styles.title}>Pesquisa de mercado para crescer com dados</h2>
+        <h2 className={styles.title}>
+          Pesquisa de mercado para crescer com dados
+        </h2>
         <p className={styles.text}>
           Entenda seu publico, identifique oportunidades e valide sua proposta
           antes de investir. A 4M entrega diagnostico claro e recomendacoes
-          praticas para orientar suas proximas acoes.
+          praticas para orientar suas proximas ações.
         </p>
         <div className={styles.videoWrapper}>
           <iframe
