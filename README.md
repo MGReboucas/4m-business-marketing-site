@@ -1,5 +1,7 @@
 ﻿# 4M Business & Marketing - Site Institucional
 
+https://www.4mbusinessmarketing.com/
+
 Site institucional da **4M Business & Marketing**, focado em marketing estratégico, mídia urbana e tecnologia para empresas que buscam crescimento real.
 
 [![Next.js](https://img.shields.io/badge/Next.js-16.1.1-black?style=flat-square&logo=next.js)](https://nextjs.org/)
@@ -21,10 +23,10 @@ O site apresenta os serviços e diferenciais da 4M Business & Marketing com foco
 
 A home esta organizada na seguinte ordem:
 
-1. **Hero (video + mensagem principal)**
-   - Video do YouTube explicando como a 4M atua.
-   - Titulo: "Marketing estrategico, mídia urbana e tecnologia para empresas que querem crescer de verdade."
-   - CTA primario: **"Preencher Formulario"** (leva para `/contato`).
+1. **Hero (vídeo + mensagem principal)**
+   - Vídeo do YouTube explicando como a 4M atua.
+   - Título: "Marketing estratégico, mídia urbana e tecnologia para empresas que querem crescer de verdade."
+   - CTA primario: **"Preencher Formulário"** (leva para `/contato`).
    - CTA secundario: **"Lei do incentivo ao esporte"** (scroll para `#processo`).
 
 2. **Proposta de Valor (Por que 4M?)**
@@ -40,11 +42,11 @@ A home esta organizada na seguinte ordem:
    - CTA externo: **"Agendar gravação"** (abre o formulário externo).
 
 5. **Serviços**
-   - 4 blocos com listas de entregaveis:
+   - 4 blocos com listas de entregáveis:
      - Marketing Digital Estratégico
      - Produção de Conteúdo Profissional
      - Marketing Urbano e Mídias Fisicas
-     - Tecnologia e Programacao Aplicada ao Marketing
+     - Tecnologia e Programação Aplicada ao Marketing
 
 6. **Lei do Incentivo ao Esporte (Processo)**
    - Video do YouTube explicando modalidade de patrocinio com retorno em marketing.
@@ -63,7 +65,7 @@ A home esta organizada na seguinte ordem:
 
 - Hero institucional.
 - Quem somos.
-- Missao, visao e valores.
+- Missão, visão e valores.
 - CTA para contato.
 
 ---
@@ -87,7 +89,7 @@ Menu fixo no topo (desktop e mobile):
 - Sobre Nós
 - Contato
 
-O menu usa scroll suave com compensacao de altura do header e redireciona para a home caso o usuário esteja em outra pagina.
+O menu usa scroll suave com compensação de altura do header e redireciona para a home caso o usuário esteja em outra pagina.
 
 ---
 
@@ -174,6 +176,8 @@ npm run dev
 # Build
 npm run build
 
-# Producao
+# Producão
 npm run start
 ```
+
+matheusreboucas.dev
