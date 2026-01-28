@@ -8,8 +8,8 @@ const getPodcastImages = () => {
   try {
     return fs
       .readdirSync(podcastDir)
-      .filter((file) => /\.(png|jpe?g|webp|avif)$/i.test(file))
-      .map((file) => `/podcast/${file}`)
+      .filter(file => /\.(png|jpe?g|webp|avif)$/i.test(file))
+      .map(file => `/podcast/${file}`)
   } catch {
     return []
   }
@@ -17,7 +17,8 @@ const getPodcastImages = () => {
 
 export default function PodcastNatalStudio() {
   const images = getPodcastImages()
-  const slides = images.length > 0 ? images : ['/podcast/podcast-natal-studio.jpg']
+  const slides =
+    images.length > 0 ? images : ['/podcast/podcast-natal-studio.jpg']
 
   return (
     <section id="podcast" className={styles.section}>
@@ -28,7 +29,7 @@ export default function PodcastNatalStudio() {
             <h2 className={styles.title}>Podcast Natal Studio</h2>
             <p className={styles.paragraph}>
               A 4M Business & Marketing também tem o Podcast Natal Studio, um
-              studio de podcast profissional em Natal feito para o publico.
+              studio de podcast profissional em Natal feito para o público.
             </p>
             <p className={styles.paragraph}>
               Um ambiente completo para gravações, entrevistas e conteúdos com

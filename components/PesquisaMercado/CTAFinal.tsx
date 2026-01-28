@@ -9,9 +9,9 @@ export default function CTAFinal() {
           Pesquisa de mercado para crescer com dados
         </h2>
         <p className={styles.text}>
-          Entenda seu publico, identifique oportunidades e valide sua proposta
-          antes de investir. A 4M entrega diagnostico claro e recomendacoes
-          praticas para orientar suas proximas ações.
+          Entenda seu público, identifique oportunidades e valide sua proposta
+          antes de investir. A 4M entrega diagnóstico claro e recomendações
+          práticas para orientar suas próximas ações.
         </p>
         <div className={styles.videoWrapper}>
           <iframe

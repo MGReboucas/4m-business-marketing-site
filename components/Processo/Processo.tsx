@@ -8,7 +8,7 @@ export default function Processo() {
     <section id="processo" className={styles.section}>
       <div className={styles.container}>
         <h2 className={styles.title}>
-          COMO A 4M PODE AJUDAR SUA EMPRESA A FAZER A DIFERENÇA?
+          Transforme imposto em impacto, visibilidade e posicionamento
         </h2>
         <div className={styles.videoWrapper}>
           <iframe
