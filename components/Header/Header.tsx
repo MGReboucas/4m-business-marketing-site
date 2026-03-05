@@ -80,6 +80,11 @@ export default function Header() {
             </Link>
           </li>
           <li>
+            <Link href="/trajetoria" className={styles.navLink}>
+              Trajetória
+            </Link>
+          </li>
+          <li>
             <Link href="/contato" className={styles.btnContact}>
               Contato
             </Link>
@@ -133,6 +138,13 @@ export default function Header() {
             onClick={() => setIsMenuOpen(false)}
           >
             Sobre Nós
+          </Link>
+          <Link
+            href="/trajetoria"
+            className={styles.mobileLink}
+            onClick={() => setIsMenuOpen(false)}
+          >
+            Trajetória
           </Link>
           <Link
             href="/contato"

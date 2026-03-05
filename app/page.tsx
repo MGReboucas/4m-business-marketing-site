@@ -8,6 +8,7 @@ import ParaQuem from '@/components/ParaQuem/ParaQuem'
 import Autoridade from '@/components/Autoridade/Autoridade'
 import PesquisaMercado from '@/components/PesquisaMercado/CTAFinal'
 import PodcastNatalStudio from '@/components/PodcastNatalStudio/PodcastNatalStudio'
+import Parceiras from '@/components/Parceiras/Parceiras'
 
 export default function Home() {
   return (
@@ -15,6 +16,7 @@ export default function Home() {
       <Header />
       <main>
         <HeroSection />
+        <Parceiras />
         <PropostaValor />
         <PesquisaMercado />
         <PodcastNatalStudio />
