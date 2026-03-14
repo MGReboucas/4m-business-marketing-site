@@ -1,8 +1,8 @@
-﻿# 4M Business & Marketing - Site Institucional
+﻿# 4M Marketing & Business - Site Institucional
 
 https://www.4mbusinessmarketing.com/
 
-Site institucional da **4M Business & Marketing**, focado em marketing estratégico, mídia urbana e tecnologia para empresas que buscam crescimento real.
+Site institucional da **4M Marketing & Business**, focado em marketing estratégico, mídia urbana e tecnologia para empresas que buscam crescimento real.
 
 [![Next.js](https://img.shields.io/badge/Next.js-16.1.1-black?style=flat-square&logo=next.js)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.2.3-blue?style=flat-square&logo=react)](https://reactjs.org/)
@@ -13,7 +13,7 @@ Site institucional da **4M Business & Marketing**, focado em marketing estratég
 
 ## Sobre o Projeto
 
-O site apresenta os serviços e diferenciais da 4M Business & Marketing com foco em conversão e posicionamento. A estrutura atual combina seções institucionais, vídeos, ofertas especificas e CTAs diretas para contato.
+O site apresenta os serviços e diferenciais da 4M Marketing & Business com foco em conversão e posicionamento. A estrutura atual combina seções institucionais, vídeos, ofertas especificas e CTAs diretas para contato.
 
 ---
 

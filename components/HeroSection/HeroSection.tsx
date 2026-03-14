@@ -19,7 +19,7 @@ export default function HeroSection() {
       <div className={styles.heroVideo}>
         <iframe
           src="https://www.youtube.com/embed/rjPFZlyTonc?rel=0&modestbranding=1&playsinline=1&autoplay=1"
-          title="Video 4M Business & Marketing"
+          title="Video 4M Marketing & Business"
           frameBorder="0"
           allow="autoplay; encrypted-media; gyroscope;"
           allowFullScreen
@@ -33,7 +33,7 @@ export default function HeroSection() {
         </h1>
 
         <p className={styles.subtitle}>
-          A 4M Business & Marketing auxilia empresas a aumentarem sua
+          A 4M Marketing & Business auxilia empresas a aumentarem sua
           visibilidade, fortalecerem sua marca a conquistarem mais clientes por
           meio de estratégias integradas de marketing digital, mídia física e
           soluções tecnológicas.

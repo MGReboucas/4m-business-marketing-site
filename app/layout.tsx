@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: '4M Business & Marketing',
+  title: '4M Marketing & Business',
   description:
     'Marketing estratégico, mídia urbana e tecnologia para empresas que querem crescer de verdade.',
 }

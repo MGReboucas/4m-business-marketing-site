@@ -85,7 +85,7 @@ export default function PropostaValor() {
     <section id="proposta" className={styles.section}>
       <div className={styles.container}>
         <h2 className={styles.title}>
-          Por que escolher a 4M Business & Marketing?
+          Por que escolher a 4M Marketing & Business?
         </h2>
         <p className={styles.subtitle}>
           Não entregamos apenas posts, placas ou campanhas isoladas. Entregamos

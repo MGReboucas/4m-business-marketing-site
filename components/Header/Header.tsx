@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import styles from './Header.module.scss'
-import logo from '../../public/logos/4m-business.png'
+import logo from '../../public/logos/4m-marketing-business-SEM-FUNDO.png'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -32,7 +32,7 @@ export default function Header() {
           <img
             src={logo.src}
             className={styles.logoImagem}
-            alt="4M Business & Marketing"
+            alt="4M Marketing & Business"
           />
         </Link>
 

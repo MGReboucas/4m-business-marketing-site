@@ -18,7 +18,7 @@ export default function Sobre() {
       <main className={styles.main}>
         <section className={styles.hero}>
           <div className={styles.container}>
-            <h1 className={styles.title}>Sobre a 4M Business & Marketing</h1>
+            <h1 className={styles.title}>Sobre a 4M Marketing & Business</h1>
             <p className={styles.subtitle}>
               Transformando negócios através de marketing estratégico e
               tecnologia
@@ -31,7 +31,7 @@ export default function Sobre() {
             <div className={styles.content}>
               <h2 className={styles.sectionTitle}>Quem Somos</h2>
               <p className={styles.paragraph}>
-                A 4M Business & Marketing nasceu com o propósito de auxiliar
+                A 4M Marketing & Business nasceu com o propósito de auxiliar
                 empresas a se posicionarem melhor no mercado, utilizando
                 marketing estratégico, mídia urbana e tecnologia.
               </p>

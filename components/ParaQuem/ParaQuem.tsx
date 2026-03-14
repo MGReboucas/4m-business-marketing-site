@@ -29,7 +29,7 @@ export default function ParaQuem() {
           Atendemos empresas que buscam crescimento real
         </h2>
         <p className={styles.subtitle}>
-          A 4M Business & Marketing é ideal para:
+          A 4M Marketing & Business é ideal para:
         </p>
         <div className={styles.grid}>
           {publicos.map((publico, index) => (

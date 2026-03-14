@@ -28,7 +28,7 @@ export default function PodcastNatalStudio() {
             <p className={styles.eyebrow}>Nosso espaço</p>
             <h2 className={styles.title}>Podcast Natal Studio</h2>
             <p className={styles.paragraph}>
-              A 4M Business & Marketing também tem o Podcast Natal Studio, um
+              A 4M Marketing & Business também tem o Podcast Natal Studio, um
               studio de podcast profissional em Natal feito para o público.
             </p>
             <p className={styles.paragraph}>
