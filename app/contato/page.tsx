@@ -106,6 +106,40 @@ export default function Contato() {
           </div>
         </section>
 
+        <div className={styles.contactInfo}>
+          <div className={styles.infoCards}>
+            <div className={styles.infoCard}>
+              <span className={styles.infoLabel}>📧 E-mail: </span>
+              <button
+                onClick={handleCopyEmail}
+                className={styles.infoValue}
+                style={{
+                  cursor: 'pointer',
+                  background: 'none',
+                  border: 'none',
+                  padding: 0,
+                  color: 'inherit',
+                  font: 'inherit',
+                }}
+                title="Clique para copiar"
+              >
+                {contacts.email} {emailCopied && '✓ Copiado!'}
+              </button>
+            </div>
+            <div className={styles.infoCard}>
+              <span className={styles.infoLabel}>📱 WhatsApp: </span>
+              <a
+                href={linkWatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.infoValue}
+              >
+                {contacts.whatsapp}
+              </a>
+            </div>
+          </div>
+        </div>
+
         <section className={styles.formSection}>
           <div className={styles.container}>
             <div className={styles.formWrapper}>
@@ -247,11 +281,6 @@ export default function Contato() {
               </form>
 
               <div className={styles.contactInfo}>
-                <h3 className={styles.infoTitle}>Outras formas de contato</h3>
-                <p className={styles.infoText}>
-                  Prefere falar diretamente? Entre em contato pelos nossos
-                  canais:
-                </p>
                 <div className={styles.infoCards}>
                   <div className={styles.infoCard}>
                     <span className={styles.infoLabel}>📧 E-mail: </span>
