@@ -51,28 +51,29 @@ export default function Header() {
             </button>
           </li>
           <li>
-            <button
-              onClick={() => scrollToSection('servicos')}
-              className={styles.navLink}
-            >
-              Serviços
-            </button>
+            <Link href="/plano-growth-4m" className={styles.navLink}>
+              Marketing
+            </Link>
           </li>
           <li>
-            <button
-              onClick={() => scrollToSection('podcast')}
+            <Link href="/#vans" className={styles.navLink}>
+              Vans para alugar
+            </Link>
+          </li>
+          <li>
+            <Link href="/desenvolvimento-de-sistemas" className={styles.navLink}>
+              Automações
+            </Link>
+          </li>
+          <li>
+            <a
+              href="https://podcast-natal-form.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
               className={styles.navLink}
             >
               Podcast
-            </button>
-          </li>
-          <li>
-            <button
-              onClick={() => scrollToSection('processo')}
-              className={styles.navLink}
-            >
-              Lei do incentivo
-            </button>
+            </a>
           </li>
           <li>
             <Link href="/sobre" className={styles.navLink}>
@@ -114,24 +115,36 @@ export default function Header() {
           >
             Por que 4M?
           </button>
-          <button
-            onClick={() => scrollToSection('servicos')}
+          <Link
+            href="/plano-growth-4m"
             className={styles.mobileLink}
+            onClick={() => setIsMenuOpen(false)}
           >
-            Serviços
-          </button>
-          <button
-            onClick={() => scrollToSection('podcast')}
+            Marketing
+          </Link>
+          <Link
+            href="/#vans"
             className={styles.mobileLink}
+            onClick={() => setIsMenuOpen(false)}
+          >
+            Vans para alugar
+          </Link>
+          <Link
+            href="/desenvolvimento-de-sistemas"
+            className={styles.mobileLink}
+            onClick={() => setIsMenuOpen(false)}
+          >
+            Automações
+          </Link>
+          <a
+            href="https://podcast-natal-form.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.mobileLink}
+            onClick={() => setIsMenuOpen(false)}
           >
             Podcast
-          </button>
-          <button
-            onClick={() => scrollToSection('processo')}
-            className={styles.mobileLink}
-          >
-            Lei do incentivo
-          </button>
+          </a>
           <Link
             href="/sobre"
             className={styles.mobileLink}

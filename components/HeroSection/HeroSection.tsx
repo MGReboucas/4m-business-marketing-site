@@ -31,6 +31,7 @@ type GrowthSummary = {
 }
 
 type Slide = {
+  slug: string
   eyebrow: string
   theme: SlideTheme
   title: string
@@ -42,6 +43,7 @@ type Slide = {
 
 const slides: Slide[] = [
   {
+    slug: 'marketing',
     eyebrow: 'Promoção especial · Plano Growth 4M',
     theme: 'themeStrategy',
     title: 'Sua empresa merece mais do que posts bonitos.',
@@ -66,6 +68,7 @@ const slides: Slide[] = [
     },
   },
   {
+    slug: 'vans',
     eyebrow: 'Aluguel de vans',
     theme: 'themeVans',
     title: 'Aluguel de vans para viagens, eventos e empresas.',
@@ -82,16 +85,20 @@ const slides: Slide[] = [
     ],
   },
   {
-    eyebrow: 'Assinatura para SaaS',
+    slug: 'automacoes',
+    eyebrow: 'Sistema SaaS sob medida',
     theme: 'themeSaas',
-    title:
-      'Planos recorrentes de marketing e tecnologia para SaaS vender todos os meses.',
+    title: 'Pare de perder tempo organizando sua operação no improviso.',
     subtitle:
-      'Unimos landing pages, automações, funis de aquisição e conteúdo estratégico para transformar visitantes em leads, testes gratuitos e assinantes ativos.',
-    highlights: ['Funil de aquisição', 'Automação comercial', 'Receita recorrente'],
+      'Criamos sistemas sob medida para sua empresa centralizar processos, automatizar tarefas e acompanhar tudo com mais clareza.',
+    highlights: ['Sistema personalizado', 'Operação organizada', 'Automação de processos'],
     actions: [
-      { label: 'Criar plano SaaS', href: '/contato', variant: 'primary' },
-      { label: 'Conhecer a 4M', href: '/sobre', variant: 'secondary' },
+      { label: 'Criar meu sistema', href: '/contato', variant: 'primary' },
+      {
+        label: 'Ver possibilidades',
+        href: '/desenvolvimento-de-sistemas',
+        variant: 'secondary',
+      },
     ],
   },
 ]
@@ -117,6 +124,23 @@ export default function HeroSection() {
   const goToNextSlide = () => {
     setActiveSlide((current) => (current + 1) % slides.length)
   }
+
+  useEffect(() => {
+    const selectSlideFromHash = () => {
+      const hash = window.location.hash.replace('#', '')
+      const slideIndex = slides.findIndex((slide) => slide.slug === hash)
+
+      if (slideIndex >= 0) {
+        setActiveSlide(slideIndex)
+        document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' })
+      }
+    }
+
+    selectSlideFromHash()
+    window.addEventListener('hashchange', selectSlideFromHash)
+
+    return () => window.removeEventListener('hashchange', selectSlideFromHash)
+  }, [])
 
   useEffect(() => {
     if (isPaused) {
