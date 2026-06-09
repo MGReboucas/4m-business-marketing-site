@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import styles from './HeroSection.module.scss'
 
-const ROTATION_DELAY = 7000
+const ROTATION_DELAY = 10000
 const WHATSAPP_VANS_URL =
   'https://wa.me/5584998045201?text=Ol%C3%A1%2C%20quero%20consultar%20a%20disponibilidade%20para%20aluguel%20de%20vans.'
 
@@ -77,11 +77,11 @@ const slides: Slide[] = [
     highlights: ['Viagens e eventos', 'Traslados', 'Atendimento rápido'],
     actions: [
       {
-        label: 'Consultar Disponibilidade',
+        label: 'Chamar no WhatsApp',
         href: WHATSAPP_VANS_URL,
         variant: 'primary',
       },
-      { label: 'Solicitar Orçamento', href: '/aluguel-de-vans', variant: 'secondary' },
+      { label: 'Pedir Orçamento', href: '/aluguel-de-vans#orcamento', variant: 'secondary' },
     ],
   },
   {
@@ -173,6 +173,9 @@ export default function HeroSection() {
         onMouseLeave={() => setIsPaused(false)}
         onFocus={() => setIsPaused(true)}
         onBlur={() => setIsPaused(false)}
+        onTouchStart={() => setIsPaused(true)}
+        onTouchEnd={() => setIsPaused(false)}
+        onTouchCancel={() => setIsPaused(false)}
       >
         <div className={styles.slides}>
           {slides.map((slide, index) => (
