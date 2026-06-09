@@ -429,7 +429,7 @@ export default function AdminDashboard({ username }: AdminDashboardProps) {
           <article className={styles.metricCard}>
             <span>Receita mensal monitorada</span>
             <strong>{currencyFormatter.format(summary.totalMrr)}</strong>
-            <p>MRR estimado da carteira SaaS</p>
+            <p>MRR cadastrado da carteira SaaS</p>
           </article>
           <article className={styles.metricCard}>
             <span>Uptime médio</span>

@@ -1,7 +1,7 @@
 import { neon } from '@neondatabase/serverless'
 
 export type SaasStatus = 'online' | 'attention' | 'offline'
-export type SaasPriority = 'Baixa' | 'Média' | 'Alta'
+export type SaasPriority = 'Baixa' | 'M\u00e9dia' | 'Alta'
 
 export type SaasProduct = {
   id: string
@@ -43,105 +43,6 @@ type SaasRow = {
   updated_at?: string
 }
 
-const initialSaasProducts: SaasInput[] = [
-  {
-    id: 'limpfy-ops',
-    name: 'Limpfy Ops',
-    client: 'Limpfy',
-    segment: 'Serviços de limpeza',
-    plan: 'Gestão Operacional',
-    status: 'online',
-    uptime: 99.98,
-    mrr: 2480,
-    users: 42,
-    tickets: 1,
-    lastDeploy: '09 jun 2026, 09:12',
-    renewal: '18 jun 2026',
-    owner: 'Equipe Produto',
-    priority: 'Baixa',
-  },
-  {
-    id: 'free-multas-crm',
-    name: 'Free Multas CRM',
-    client: 'Free Multas',
-    segment: 'Consultoria automotiva',
-    plan: 'CRM e Atendimento',
-    status: 'attention',
-    uptime: 98.72,
-    mrr: 3200,
-    users: 28,
-    tickets: 3,
-    lastDeploy: '07 jun 2026, 18:40',
-    renewal: '30 jun 2026',
-    owner: 'Suporte 4M',
-    priority: 'Alta',
-  },
-  {
-    id: 'ana-beatriz-agenda',
-    name: 'Ana Beatriz Agenda',
-    client: 'Ana Beatriz Estética',
-    segment: 'Clínica estética',
-    plan: 'Agenda e Recorrência',
-    status: 'online',
-    uptime: 99.91,
-    mrr: 1650,
-    users: 17,
-    tickets: 0,
-    lastDeploy: '06 jun 2026, 14:20',
-    renewal: '12 jul 2026',
-    owner: 'Equipe Produto',
-    priority: 'Baixa',
-  },
-  {
-    id: 'aja-members',
-    name: 'AJA Members',
-    client: 'AJA Anadecon',
-    segment: 'Associação',
-    plan: 'Membros e Conteúdo',
-    status: 'online',
-    uptime: 99.63,
-    mrr: 2100,
-    users: 136,
-    tickets: 2,
-    lastDeploy: '05 jun 2026, 11:05',
-    renewal: '25 jun 2026',
-    owner: 'Suporte 4M',
-    priority: 'Média',
-  },
-  {
-    id: 'anpc-racing',
-    name: 'ANPC Racing Hub',
-    client: 'ANPC Automobilismo',
-    segment: 'Eventos esportivos',
-    plan: 'Inscrições e Ranking',
-    status: 'attention',
-    uptime: 97.89,
-    mrr: 2850,
-    users: 74,
-    tickets: 4,
-    lastDeploy: '03 jun 2026, 16:10',
-    renewal: '20 jun 2026',
-    owner: 'Dev 4M',
-    priority: 'Alta',
-  },
-  {
-    id: 'podcast-natal-booking',
-    name: 'Podcast Natal Booking',
-    client: 'Podcast Natal Studio',
-    segment: 'Estúdio de gravação',
-    plan: 'Reservas e Pagamentos',
-    status: 'offline',
-    uptime: 92.14,
-    mrr: 1900,
-    users: 11,
-    tickets: 5,
-    lastDeploy: '01 jun 2026, 10:32',
-    renewal: '15 jun 2026',
-    owner: 'Dev 4M',
-    priority: 'Alta',
-  },
-]
-
 const getDatabaseUrl = () =>
   process.env.NEON_DATABASE_URL || process.env.DATABASE_URL || ''
 
@@ -149,7 +50,7 @@ const getSql = () => {
   const databaseUrl = getDatabaseUrl()
 
   if (!databaseUrl) {
-    throw new Error('NEON_DATABASE_URL não configurada')
+    throw new Error('NEON_DATABASE_URL nao configurada')
   }
 
   return neon(databaseUrl)
@@ -192,24 +93,11 @@ export const ensureSaasSchema = async () => {
       last_deploy TEXT NOT NULL DEFAULT '',
       renewal TEXT NOT NULL DEFAULT '',
       owner TEXT NOT NULL DEFAULT '',
-      priority TEXT NOT NULL CHECK (priority IN ('Baixa', 'Média', 'Alta')),
+      priority TEXT NOT NULL CHECK (priority IN ('Baixa', 'M\u00e9dia', 'Alta')),
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
       updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     )
   `
-
-  const countRows = (await sql`
-    SELECT COUNT(*)::text AS count FROM saas_products
-  `) as Array<{ count: string }>
-  const [countRow] = countRows
-
-  if (Number(countRow?.count || 0) > 0) {
-    return
-  }
-
-  for (const product of initialSaasProducts) {
-    await upsertSaasProduct(product, false)
-  }
 }
 
 export const listSaasProducts = async () => {
