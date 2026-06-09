@@ -33,6 +33,7 @@ export async function POST(request: Request) {
       servico = '',
       mensagem = '',
       website = '',
+      origem = '',
     } = body
 
     if (website) {
@@ -72,12 +73,27 @@ export async function POST(request: Request) {
       )
     }
 
-    const revenueLabel = revenueLabels[String(servico)] || String(servico)
+    const isVansLead = String(origem).trim() === 'aluguel-de-vans'
+    const serviceLabel = revenueLabels[String(servico)] || String(servico)
+    const leadTitle = isVansLead
+      ? 'Novo pedido de aluguel de vans recebido pelo site da 4M'
+      : 'Novo contato recebido pelo site da 4M'
+    const serviceFieldLabel = isVansLead
+      ? 'Servico solicitado'
+      : 'Faturamento mensal aproximado'
+    const messageFieldLabel = isVansLead
+      ? 'Detalhes da viagem'
+      : 'Principal desafio'
+    const subject = isVansLead
+      ? `Novo pedido de van - ${String(empresa).trim()}`
+      : `Novo lead do site - ${String(empresa).trim()}`
     const safeNome = escapeHtml(nome)
     const safeEmpresa = escapeHtml(empresa)
     const safeTelefone = escapeHtml(telefone)
     const safeEmail = escapeHtml(normalizedEmail)
-    const safeRevenue = escapeHtml(revenueLabel)
+    const safeService = escapeHtml(serviceLabel)
+    const safeServiceFieldLabel = escapeHtml(serviceFieldLabel)
+    const safeMessageFieldLabel = escapeHtml(messageFieldLabel)
     const safeMensagem = escapeHtml(mensagem || 'Nenhuma mensagem adicional')
 
     const transporter = nodemailer.createTransport({
@@ -92,28 +108,28 @@ export async function POST(request: Request) {
       from: process.env.GMAIL_USER,
       to: process.env.GMAIL_USER,
       replyTo: normalizedEmail,
-      subject: `Novo lead do site - ${String(empresa).trim()}`,
+      subject,
       html: `
-        <h2>Novo contato recebido pelo site da 4M</h2>
+        <h2>${escapeHtml(leadTitle)}</h2>
         <p><strong>Nome:</strong> ${safeNome}</p>
         <p><strong>Empresa:</strong> ${safeEmpresa}</p>
         <p><strong>Telefone / WhatsApp:</strong> ${safeTelefone}</p>
         <p><strong>E-mail:</strong> ${safeEmail}</p>
-        <p><strong>Faturamento mensal aproximado:</strong> ${safeRevenue}</p>
-        <p><strong>Principal desafio:</strong></p>
+        <p><strong>${safeServiceFieldLabel}:</strong> ${safeService}</p>
+        <p><strong>${safeMessageFieldLabel}:</strong></p>
         <p>${safeMensagem}</p>
         <hr>
         <p><small>Para responder, clique em "Responder" ou chame o lead pelo WhatsApp informado.</small></p>
       `,
       text: `
-Novo contato recebido pelo site da 4M
+${leadTitle}
 
 Nome: ${String(nome).trim()}
 Empresa: ${String(empresa).trim()}
 Telefone / WhatsApp: ${String(telefone).trim()}
 E-mail: ${normalizedEmail}
-Faturamento mensal aproximado: ${revenueLabel}
-Principal desafio: ${String(mensagem || 'Nenhuma mensagem adicional').trim()}
+${serviceFieldLabel}: ${serviceLabel}
+${messageFieldLabel}: ${String(mensagem || 'Nenhuma mensagem adicional').trim()}
       `.trim(),
     })
 

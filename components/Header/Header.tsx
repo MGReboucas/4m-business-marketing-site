@@ -56,7 +56,7 @@ export default function Header() {
             </Link>
           </li>
           <li>
-            <Link href="/#vans" className={styles.navLink}>
+            <Link href="/aluguel-de-vans" className={styles.navLink}>
               Vans para alugar
             </Link>
           </li>
@@ -123,7 +123,7 @@ export default function Header() {
             Marketing
           </Link>
           <Link
-            href="/#vans"
+            href="/aluguel-de-vans"
             className={styles.mobileLink}
             onClick={() => setIsMenuOpen(false)}
           >

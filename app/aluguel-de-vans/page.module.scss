@@ -1,0 +1,623 @@
+.main {
+  padding-top: 8rem;
+  background: #f8fafc;
+  color: #0f172a;
+
+  @media (min-width: 1024px) {
+    padding-top: 9.5rem;
+  }
+}
+
+.container {
+  width: min(100%, 1180px);
+  margin: 0 auto;
+  padding: 0 1.25rem;
+
+  @media (min-width: 768px) {
+    padding: 0 2rem;
+  }
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  min-height: 720px;
+  display: flex;
+  align-items: center;
+  color: white;
+  background:
+    linear-gradient(90deg, rgba(3, 31, 82, 0.98) 0%, rgba(8, 74, 167, 0.9) 44%, rgba(8, 74, 167, 0.48) 68%, rgba(8, 74, 167, 0.08) 100%),
+    url('/hero/hero-vans-rental.png') center right / cover no-repeat;
+
+  @media (max-width: 760px) {
+    min-height: 760px;
+    background:
+      linear-gradient(180deg, rgba(3, 31, 82, 0.98) 0%, rgba(8, 74, 167, 0.88) 62%, rgba(8, 74, 167, 0.68) 100%),
+      url('/hero/hero-vans-rental.png') center / cover no-repeat;
+  }
+}
+
+.heroCopy {
+  max-width: 720px;
+  padding: 5rem 0 5.5rem;
+
+  h1 {
+    max-width: 700px;
+    margin: 1rem 0 1.2rem;
+    font-size: 2.55rem;
+    font-weight: 950;
+    line-height: 1.05;
+    letter-spacing: 0;
+    text-shadow: 0 18px 42px rgba(0, 0, 0, 0.34);
+
+    @media (min-width: 768px) {
+      font-size: 4.15rem;
+    }
+  }
+}
+
+.heroText {
+  max-width: 640px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.91);
+  font-size: 1.07rem;
+  line-height: 1.75;
+  text-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+
+  @media (min-width: 768px) {
+    font-size: 1.17rem;
+  }
+}
+
+.badge,
+.kicker {
+  display: inline-flex;
+  min-height: 2rem;
+  align-items: center;
+  padding: 0.34rem 0.78rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 950;
+  line-height: 1.15;
+  letter-spacing: 0;
+}
+
+.badge {
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  background: rgba(255, 255, 255, 0.14);
+  color: #e0f2fe;
+  backdrop-filter: blur(10px);
+}
+
+.kicker {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.heroActions,
+.finalActions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin-top: 2rem;
+
+  @media (min-width: 560px) {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+.primaryButton,
+.secondaryButton,
+.submitButton,
+.whatsappButton {
+  display: inline-flex;
+  min-height: 3.45rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.9rem 1.5rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 0.98rem;
+  font-weight: 950;
+  line-height: 1.2;
+  letter-spacing: 0;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    background 0.22s ease,
+    border-color 0.22s ease;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+  }
+}
+
+.primaryButton,
+.submitButton,
+.whatsappButton {
+  background: #22c55e;
+  color: #052e16;
+  box-shadow: 0 20px 42px rgba(0, 0, 0, 0.22);
+
+  &:hover:not(:disabled) {
+    background: #86efac;
+  }
+}
+
+.secondaryButton {
+  border-color: rgba(255, 255, 255, 0.65);
+  background: rgba(255, 255, 255, 0.12);
+  color: white;
+  backdrop-filter: blur(8px);
+
+  &:hover {
+    border-color: white;
+    background: rgba(255, 255, 255, 0.2);
+  }
+}
+
+.trustRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 1.5rem;
+
+  span {
+    display: inline-flex;
+    min-height: 2rem;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: 999px;
+    padding: 0.42rem 0.78rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.86rem;
+    font-weight: 850;
+  }
+}
+
+.metricsStrip {
+  position: relative;
+  z-index: 2;
+  margin-top: -1.75rem;
+
+  .container {
+    display: grid;
+    gap: 0.85rem;
+
+    @media (min-width: 780px) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+}
+
+.metric,
+.problemCard,
+.useCaseCard,
+.stepCard {
+  border: 1px solid #dbeafe;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+}
+
+.metric {
+  min-height: 7.4rem;
+  padding: 1.15rem;
+
+  strong {
+    display: block;
+    color: #0b5cff;
+    font-size: 2.2rem;
+    font-weight: 950;
+    line-height: 1;
+  }
+
+  span {
+    display: block;
+    margin-top: 0.5rem;
+    color: #334155;
+    font-weight: 900;
+    line-height: 1.35;
+  }
+}
+
+.problemSection,
+.useCases,
+.processSection,
+.quoteSection,
+.finalCta {
+  padding: 5rem 0;
+
+  @media (min-width: 1024px) {
+    padding: 6.5rem 0;
+  }
+}
+
+.problemSection,
+.processSection {
+  background: #fff;
+}
+
+.useCases {
+  background: #eef6ff;
+}
+
+.sectionIntro,
+.quoteHeader {
+  max-width: 780px;
+  margin-bottom: 2.25rem;
+
+  h2 {
+    margin: 0.95rem 0 1rem;
+    color: #0f172a;
+    font-size: 2.1rem;
+    font-weight: 950;
+    line-height: 1.08;
+    letter-spacing: 0;
+
+    @media (min-width: 768px) {
+      font-size: 3.25rem;
+    }
+  }
+
+  p:not(.kicker) {
+    margin: 0;
+    color: #475569;
+    font-size: 1.06rem;
+    line-height: 1.75;
+  }
+}
+
+.problemGrid {
+  display: grid;
+  gap: 1rem;
+
+  @media (min-width: 860px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.problemCard {
+  min-height: 13rem;
+  padding: 1.2rem;
+  border-left: 5px solid #f59e0b;
+
+  h3 {
+    margin: 0 0 0.7rem;
+    color: #0f172a;
+    font-size: 1.25rem;
+    font-weight: 950;
+    line-height: 1.2;
+  }
+
+  p {
+    margin: 0;
+    color: #475569;
+    line-height: 1.65;
+  }
+}
+
+.useCaseGrid,
+.stepsGrid {
+  display: grid;
+  gap: 1rem;
+
+  @media (min-width: 760px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (min-width: 1100px) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.useCaseCard,
+.stepCard {
+  min-height: 14rem;
+  padding: 1.15rem;
+
+  h3 {
+    margin: 0 0 0.65rem;
+    color: #0f172a;
+    font-size: 1.22rem;
+    font-weight: 950;
+    line-height: 1.22;
+  }
+
+  p {
+    margin: 0;
+    color: #475569;
+    line-height: 1.65;
+  }
+}
+
+.useCaseCard {
+  border-color: #bfdbfe;
+}
+
+.stepCard {
+  span {
+    display: block;
+    margin-bottom: 0.8rem;
+    color: #0b5cff;
+    font-size: 0.86rem;
+    font-weight: 950;
+  }
+}
+
+.quoteSection {
+  scroll-margin-top: 9rem;
+  background: #f8fafc;
+}
+
+.quoteLayout {
+  display: grid;
+  gap: 1.25rem;
+
+  @media (min-width: 980px) {
+    grid-template-columns: minmax(0, 1fr) 380px;
+    align-items: start;
+  }
+}
+
+.form,
+.contactPanel {
+  border: 1px solid #dbeafe;
+  border-radius: 8px;
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.1);
+}
+
+.form {
+  position: relative;
+  background: white;
+  padding: 1.2rem;
+
+  @media (min-width: 680px) {
+    padding: 1.75rem;
+  }
+}
+
+.honeypot {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.fieldGrid {
+  display: grid;
+  gap: 1rem;
+
+  @media (min-width: 700px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.formGroup {
+  margin-bottom: 1.1rem;
+
+  label {
+    display: block;
+    margin-bottom: 0.45rem;
+    color: #1e293b;
+    font-size: 0.95rem;
+    font-weight: 850;
+    line-height: 1.35;
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    min-height: 3.2rem;
+    padding: 0.85rem 0.95rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background: white;
+    color: #0f172a;
+    font: inherit;
+    font-size: 1rem;
+    letter-spacing: 0;
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease,
+      background 0.2s ease;
+
+    &:focus {
+      outline: none;
+      border-color: #2563eb;
+      background: #f8fbff;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+    }
+
+    &::placeholder {
+      color: #94a3b8;
+    }
+  }
+
+  textarea {
+    min-height: 9rem;
+    resize: vertical;
+  }
+}
+
+.statusArea {
+  min-height: 0;
+}
+
+.successMessage,
+.errorMessage {
+  margin: 0 0 1rem;
+  padding: 0.95rem 1rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 850;
+  line-height: 1.45;
+}
+
+.successMessage {
+  border: 1px solid #86efac;
+  background: #dcfce7;
+  color: #166534;
+}
+
+.errorMessage {
+  border: 1px solid #fecaca;
+  background: #fef2f2;
+  color: #991b1b;
+}
+
+.submitButton {
+  width: 100%;
+  border: 0;
+
+  &:disabled {
+    background: #94a3b8;
+    box-shadow: none;
+    cursor: wait;
+  }
+}
+
+.contactPanel {
+  display: grid;
+  gap: 1rem;
+  background: #0f172a;
+  color: white;
+  padding: 1.25rem;
+
+  @media (min-width: 680px) {
+    padding: 1.5rem;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: 1.55rem;
+    font-weight: 950;
+    line-height: 1.18;
+    letter-spacing: 0;
+  }
+
+  p {
+    margin: 0;
+    color: #dbeafe;
+    line-height: 1.65;
+  }
+}
+
+.panelKicker {
+  color: #93c5fd;
+  font-size: 0.82rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.whatsappButton {
+  box-shadow: none;
+}
+
+.panelList {
+  padding-top: 1rem;
+  border-top: 1px solid rgba(226, 232, 240, 0.18);
+
+  span {
+    display: block;
+    margin-bottom: 0.75rem;
+    color: #93c5fd;
+    font-size: 0.85rem;
+    font-weight: 950;
+    text-transform: uppercase;
+  }
+
+  ul {
+    display: grid;
+    gap: 0.65rem;
+    margin: 0;
+    padding-left: 1.1rem;
+    color: #e0f2fe;
+    line-height: 1.5;
+  }
+}
+
+.finalCta {
+  background:
+    linear-gradient(90deg, rgba(3, 31, 82, 0.98), rgba(8, 74, 167, 0.9)),
+    url('/hero/hero-vans-rental.png') center / cover no-repeat;
+  color: white;
+  text-align: center;
+
+  .container {
+    max-width: 900px;
+  }
+
+  h2 {
+    margin: 1rem auto;
+    font-size: 2.2rem;
+    font-weight: 950;
+    line-height: 1.08;
+    letter-spacing: 0;
+
+    @media (min-width: 768px) {
+      font-size: 3.35rem;
+    }
+  }
+
+  p {
+    max-width: 760px;
+    margin: 0 auto;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.08rem;
+    line-height: 1.75;
+  }
+
+  .secondaryButton {
+    color: white;
+  }
+}
+
+.finalActions {
+  justify-content: center;
+}
+
+@media (max-width: 640px) {
+  .main {
+    padding-top: 6.8rem;
+  }
+
+  .heroCopy {
+    padding: 4rem 0 4.5rem;
+
+    h1 {
+      font-size: 2.25rem;
+    }
+  }
+
+  .primaryButton,
+  .secondaryButton,
+  .submitButton,
+  .whatsappButton {
+    width: 100%;
+  }
+
+  .problemSection,
+  .useCases,
+  .processSection,
+  .quoteSection,
+  .finalCta {
+    padding: 4rem 0;
+  }
+
+  .sectionIntro,
+  .quoteHeader {
+    h2 {
+      font-size: 1.9rem;
+    }
+  }
+}

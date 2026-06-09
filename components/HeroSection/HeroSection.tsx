@@ -81,7 +81,7 @@ const slides: Slide[] = [
         href: WHATSAPP_VANS_URL,
         variant: 'primary',
       },
-      { label: 'Solicitar Orçamento', href: '/contato', variant: 'secondary' },
+      { label: 'Solicitar Orçamento', href: '/aluguel-de-vans', variant: 'secondary' },
     ],
   },
   {
