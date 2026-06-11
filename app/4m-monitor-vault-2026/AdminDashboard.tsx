@@ -1,46 +1,152 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import type {
-  SaasPriority,
-  SaasProduct,
-  SaasStatus,
-} from '@/lib/saasRepository'
+  OperationHealth,
+  OperationPriority,
+  OperationStage,
+  SaasOperationRecord,
+} from '@/lib/saasOperationsRepository'
 import styles from './page.module.scss'
 
-type StatusFilter = SaasStatus | 'all'
+export type PanelPage =
+  | 'overview'
+  | 'sales'
+  | 'projects'
+  | 'deploy'
+  | 'saas'
+  | 'finance'
+  | 'alerts'
+  | 'create'
+
 type FormMode = 'create' | 'edit'
-type SaasFormData = Omit<SaasProduct, 'createdAt' | 'updatedAt'>
+type OperationFormData = Omit<SaasOperationRecord, 'createdAt' | 'updatedAt'>
 
-const productsApiPath = '/api/4m-saas-monitoring/products'
+const recordsApiPath = '/api/4m-saas-ops/records'
+const panelBasePath = '/4m-monitor-vault-2026'
 
-const statusLabels: Record<StatusFilter, string> = {
-  all: 'Todos',
+const stageLabels: Record<OperationStage, string> = {
+  lead: 'Venda - lead',
+  proposal: 'Proposta enviada',
+  contract: 'Contrato fechado',
+  development: 'Em desenvolvimento',
+  deploy: 'Deploy / implantacao',
+  operation: 'SaaS em operacao',
+  lost: 'Perdido',
+}
+
+const healthLabels: Record<OperationHealth, string> = {
   online: 'Online',
-  attention: 'Atenção',
+  attention: 'Atencao',
   offline: 'Offline',
 }
 
-const statusOrder: StatusFilter[] = ['all', 'online', 'attention', 'offline']
-const statusOptions: SaasStatus[] = ['online', 'attention', 'offline']
-const priorityOptions: SaasPriority[] = ['Baixa', 'Média', 'Alta']
+const stageOptions: OperationStage[] = [
+  'lead',
+  'proposal',
+  'contract',
+  'development',
+  'deploy',
+  'operation',
+  'lost',
+]
+const priorityOptions: OperationPriority[] = ['Baixa', 'Media', 'Alta']
+const healthOptions: OperationHealth[] = ['online', 'attention', 'offline']
 
-const emptyFormData: SaasFormData = {
+const navItems: Array<{ page: PanelPage; label: string; href: string }> = [
+  { page: 'overview', label: 'Visao geral', href: panelBasePath },
+  { page: 'sales', label: 'Vendas', href: `${panelBasePath}/vendas` },
+  { page: 'projects', label: 'Projetos', href: `${panelBasePath}/projetos` },
+  { page: 'deploy', label: 'Deploys', href: `${panelBasePath}/deploys` },
+  { page: 'saas', label: 'SaaS em operacao', href: `${panelBasePath}/saas` },
+  { page: 'finance', label: 'Financeiro', href: `${panelBasePath}/financeiro` },
+  { page: 'alerts', label: 'Alertas', href: `${panelBasePath}/alertas` },
+  { page: 'create', label: 'Novo registro', href: `${panelBasePath}/cadastro` },
+]
+
+const pageCopy: Record<
+  PanelPage,
+  { kicker: string; title: string; subtitle: string }
+> = {
+  overview: {
+    kicker: 'Operacao interna',
+    title: 'Controle real da esteira SaaS da 4M',
+    subtitle:
+      'Acompanhe oportunidades, propostas, contratos, desenvolvimento, deploy, operacao e valores reais cadastrados no banco Neon.',
+  },
+  sales: {
+    kicker: 'Vendas',
+    title: 'Pipeline comercial SaaS',
+    subtitle:
+      'Veja leads, propostas e contratos fechados antes de virarem desenvolvimento.',
+  },
+  projects: {
+    kicker: 'Projetos',
+    title: 'SaaS em construcao',
+    subtitle:
+      'Controle responsavel, prioridade, prazo previsto e proxima acao de cada projeto.',
+  },
+  deploy: {
+    kicker: 'Deploys',
+    title: 'Implantacao e entrada em producao',
+    subtitle:
+      'Acompanhe o caminho final entre desenvolvimento, deploy e primeiro uso real do cliente.',
+  },
+  saas: {
+    kicker: 'Operacao',
+    title: 'SaaS ativos em operacao',
+    subtitle:
+      'Monitore uptime, chamados, usuarios, renovacao e receita mensal dos produtos ja deployados.',
+  },
+  finance: {
+    kicker: 'Financeiro',
+    title: 'Valores reais da carteira SaaS',
+    subtitle:
+      'Some proposta, setup, MRR, custos cadastrados e margem mensal informada pela equipe.',
+  },
+  alerts: {
+    kicker: 'Alertas',
+    title: 'Pendencias que precisam de acompanhamento',
+    subtitle:
+      'Prioridade alta, chamados abertos, saude fora do online e proximas acoes aparecem aqui.',
+  },
+  create: {
+    kicker: 'Cadastro',
+    title: 'Cadastrar ou atualizar operacao SaaS',
+    subtitle:
+      'Preencha somente informacoes reais. O painel nao cria dados ficticios nem estimativas automaticas.',
+  },
+}
+
+const emptyFormData: OperationFormData = {
   id: '',
-  name: '',
   client: '',
+  contactName: '',
+  contactPhone: '',
+  contactEmail: '',
+  projectName: '',
   segment: '',
-  plan: '',
-  status: 'online',
-  uptime: 99.9,
-  mrr: 0,
+  source: '',
+  stage: 'lead',
+  priority: 'Baixa',
+  owner: 'Equipe 4M',
+  proposalValue: 0,
+  setupValue: 0,
+  monthlyValue: 0,
+  costValue: 0,
   users: 0,
   tickets: 0,
-  lastDeploy: '',
+  uptime: 0,
+  health: 'online',
+  saleDate: '',
+  contractDate: '',
+  expectedDeploy: '',
+  deployedAt: '',
   renewal: '',
-  owner: 'Equipe 4M',
-  priority: 'Baixa',
+  nextAction: '',
+  notes: '',
 }
 
 const currencyFormatter = new Intl.NumberFormat('pt-BR', {
@@ -58,81 +164,132 @@ const formatNow = () =>
     minute: '2-digit',
   }).format(new Date())
 
-const toFormData = (product: SaasProduct): SaasFormData => ({
-  id: product.id,
-  name: product.name,
-  client: product.client,
-  segment: product.segment,
-  plan: product.plan,
-  status: product.status,
-  uptime: product.uptime,
-  mrr: product.mrr,
-  users: product.users,
-  tickets: product.tickets,
-  lastDeploy: product.lastDeploy,
-  renewal: product.renewal,
-  owner: product.owner,
-  priority: product.priority,
+const toFormData = (record: SaasOperationRecord): OperationFormData => ({
+  id: record.id,
+  client: record.client,
+  contactName: record.contactName,
+  contactPhone: record.contactPhone,
+  contactEmail: record.contactEmail,
+  projectName: record.projectName,
+  segment: record.segment,
+  source: record.source,
+  stage: record.stage,
+  priority: record.priority,
+  owner: record.owner,
+  proposalValue: record.proposalValue,
+  setupValue: record.setupValue,
+  monthlyValue: record.monthlyValue,
+  costValue: record.costValue,
+  users: record.users,
+  tickets: record.tickets,
+  uptime: record.uptime,
+  health: record.health,
+  saleDate: record.saleDate,
+  contractDate: record.contractDate,
+  expectedDeploy: record.expectedDeploy,
+  deployedAt: record.deployedAt,
+  renewal: record.renewal,
+  nextAction: record.nextAction,
+  notes: record.notes,
 })
+
+const includesStage = (
+  record: SaasOperationRecord,
+  stages: OperationStage[],
+) => stages.includes(record.stage)
+
+const getPageRecords = (
+  records: SaasOperationRecord[],
+  activePage: PanelPage,
+) => {
+  if (activePage === 'sales') {
+    return records.filter((record) =>
+      includesStage(record, ['lead', 'proposal', 'contract']),
+    )
+  }
+
+  if (activePage === 'projects') {
+    return records.filter((record) =>
+      includesStage(record, ['contract', 'development']),
+    )
+  }
+
+  if (activePage === 'deploy') {
+    return records.filter((record) =>
+      includesStage(record, ['development', 'deploy', 'operation']),
+    )
+  }
+
+  if (activePage === 'saas') {
+    return records.filter((record) => record.stage === 'operation')
+  }
+
+  if (activePage === 'alerts') {
+    return records.filter(
+      (record) =>
+        record.priority === 'Alta' ||
+        record.health !== 'online' ||
+        record.tickets > 0 ||
+        Boolean(record.nextAction),
+    )
+  }
+
+  return records
+}
 
 type AdminDashboardProps = {
   username: string
+  activePage?: PanelPage
 }
 
-export default function AdminDashboard({ username }: AdminDashboardProps) {
+export default function AdminDashboard({
+  username,
+  activePage = 'overview',
+}: AdminDashboardProps) {
   const router = useRouter()
-  const [products, setProducts] = useState<SaasProduct[]>([])
+  const [records, setRecords] = useState<SaasOperationRecord[]>([])
   const [query, setQuery] = useState('')
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all')
   const [selectedId, setSelectedId] = useState('')
   const [lastUpdated, setLastUpdated] = useState('Carregando...')
   const [formMode, setFormMode] = useState<FormMode>('create')
-  const [formData, setFormData] = useState<SaasFormData>(emptyFormData)
+  const [formData, setFormData] = useState<OperationFormData>(emptyFormData)
+  const [showEditor, setShowEditor] = useState(activePage === 'create')
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
 
-  const loadProducts = useCallback(async () => {
+  const copy = pageCopy[activePage]
+
+  const loadRecords = useCallback(async () => {
     setIsLoading(true)
     setError('')
 
     try {
-      const response = await fetch(productsApiPath, {
+      const response = await fetch(recordsApiPath, {
         cache: 'no-store',
       })
       const data = await response.json().catch(() => null)
 
       if (!response.ok) {
-        throw new Error(data?.error || 'Não foi possível carregar os SaaS.')
+        throw new Error(data?.error || 'Nao foi possivel carregar os registros.')
       }
 
-      const loadedProducts = (data?.products || []) as SaasProduct[]
-      setProducts(loadedProducts)
+      const loadedRecords = (data?.records || []) as SaasOperationRecord[]
+      setRecords(loadedRecords)
       setLastUpdated(formatNow())
-
       setSelectedId((currentSelectedId) => {
-        const currentProduct = loadedProducts.find(
-          (item) => item.id === currentSelectedId,
+        const currentRecord = loadedRecords.find(
+          (record) => record.id === currentSelectedId,
         )
-        const nextProduct = currentProduct || loadedProducts[0]
-
-        if (nextProduct) {
-          setFormMode('edit')
-          setFormData(toFormData(nextProduct))
-        } else {
-          setFormMode('create')
-          setFormData(emptyFormData)
-        }
-
-        return nextProduct?.id || ''
+        return currentRecord?.id || loadedRecords[0]?.id || ''
       })
     } catch (caughtError) {
       const message =
         caughtError instanceof Error
           ? caughtError.message
-          : 'Não foi possível conectar ao banco.'
+          : 'Nao foi possivel conectar ao banco.'
       setError(message)
     } finally {
       setIsLoading(false)
@@ -140,64 +297,80 @@ export default function AdminDashboard({ username }: AdminDashboardProps) {
   }, [])
 
   useEffect(() => {
-    loadProducts()
-  }, [loadProducts])
+    loadRecords()
+  }, [loadRecords])
+
+  useEffect(() => {
+    setShowEditor(activePage === 'create')
+    if (activePage === 'create') {
+      setFormMode('create')
+      setFormData(emptyFormData)
+    }
+  }, [activePage])
 
   const summary = useMemo(() => {
-    const totalMrr = products.reduce((sum, item) => sum + item.mrr, 0)
-    const totalTickets = products.reduce((sum, item) => sum + item.tickets, 0)
+    const totalProposal = records.reduce(
+      (sum, record) => sum + record.proposalValue,
+      0,
+    )
+    const totalSetup = records.reduce((sum, record) => sum + record.setupValue, 0)
+    const totalMrr = records.reduce((sum, record) => sum + record.monthlyValue, 0)
+    const totalCost = records.reduce((sum, record) => sum + record.costValue, 0)
+    const openTickets = records.reduce((sum, record) => sum + record.tickets, 0)
     const averageUptime =
-      products.length > 0
-        ? products.reduce((sum, item) => sum + item.uptime, 0) / products.length
+      records.filter((record) => record.stage === 'operation').length > 0
+        ? records
+            .filter((record) => record.stage === 'operation')
+            .reduce((sum, record) => sum + record.uptime, 0) /
+          records.filter((record) => record.stage === 'operation').length
         : 0
-    const criticalCount = products.filter((item) => item.status !== 'online')
-      .length
+    const alertCount = records.filter(
+      (record) =>
+        record.priority === 'Alta' ||
+        record.health !== 'online' ||
+        record.tickets > 0 ||
+        Boolean(record.nextAction),
+    ).length
 
     return {
+      totalProposal,
+      totalSetup,
       totalMrr,
-      totalTickets,
+      totalCost,
+      openTickets,
       averageUptime,
-      criticalCount,
+      alertCount,
+      salesCount: records.filter((record) =>
+        includesStage(record, ['lead', 'proposal', 'contract']),
+      ).length,
+      projectCount: records.filter((record) =>
+        includesStage(record, ['development', 'deploy']),
+      ).length,
+      operationCount: records.filter((record) => record.stage === 'operation')
+        .length,
     }
-  }, [products])
+  }, [records])
 
-  const filteredProducts = useMemo(() => {
+  const visibleRecords = useMemo(() => {
+    const pageRecords = getPageRecords(records, activePage)
     const normalizedQuery = query.trim().toLowerCase()
 
-    return products.filter((item) => {
-      const matchesStatus =
-        statusFilter === 'all' || item.status === statusFilter
-      const matchesQuery =
-        !normalizedQuery ||
-        `${item.name} ${item.client} ${item.segment} ${item.plan}`
-          .toLowerCase()
-          .includes(normalizedQuery)
+    if (!normalizedQuery) {
+      return pageRecords
+    }
 
-      return matchesStatus && matchesQuery
-    })
-  }, [products, query, statusFilter])
+    return pageRecords.filter((record) =>
+      `${record.client} ${record.projectName} ${record.segment} ${record.owner}`
+        .toLowerCase()
+        .includes(normalizedQuery),
+    )
+  }, [activePage, query, records])
 
-  const selectedProduct =
-    products.find((item) => item.id === selectedId) || products[0]
-
-  const handleSelectProduct = (product: SaasProduct) => {
-    setSelectedId(product.id)
-    setFormMode('edit')
-    setFormData(toFormData(product))
-    setSuccess('')
-    setError('')
-  }
-
-  const handleNewProduct = () => {
-    setSelectedId('')
-    setFormMode('create')
-    setFormData(emptyFormData)
-    setSuccess('')
-    setError('')
-  }
+  const selectedRecord =
+    records.find((record) => record.id === selectedId) || records[0]
 
   const updateFormData = (
-    field: keyof SaasFormData,
+    field: keyof OperationFormData,
     value: string | number,
   ) => {
     setFormData((currentData) => ({
@@ -206,7 +379,37 @@ export default function AdminDashboard({ username }: AdminDashboardProps) {
     }))
   }
 
-  const handleSaveProduct = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSelectRecord = (record: SaasOperationRecord) => {
+    setSelectedId(record.id)
+    setSuccess('')
+    setError('')
+  }
+
+  const handleNewRecord = () => {
+    setSelectedId('')
+    setFormMode('create')
+    setFormData(emptyFormData)
+    setShowEditor(true)
+    setSuccess('')
+    setError('')
+  }
+
+  const handleStartEdit = (record: SaasOperationRecord) => {
+    setSelectedId(record.id)
+    setFormMode('edit')
+    setFormData(toFormData(record))
+    setShowEditor(true)
+    setSuccess('')
+    setError('')
+    window.setTimeout(() => {
+      document.getElementById('registro-operacional')?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      })
+    }, 0)
+  }
+
+  const handleSaveRecord = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setIsSaving(true)
     setError('')
@@ -215,8 +418,8 @@ export default function AdminDashboard({ username }: AdminDashboardProps) {
     const method = formMode === 'create' ? 'POST' : 'PUT'
     const endpoint =
       formMode === 'create'
-        ? productsApiPath
-        : `${productsApiPath}/${encodeURIComponent(formData.id)}`
+        ? recordsApiPath
+        : `${recordsApiPath}/${encodeURIComponent(formData.id)}`
 
     try {
       const response = await fetch(endpoint, {
@@ -229,44 +432,44 @@ export default function AdminDashboard({ username }: AdminDashboardProps) {
       const data = await response.json().catch(() => null)
 
       if (!response.ok) {
-        throw new Error(data?.error || 'Não foi possível salvar o SaaS.')
+        throw new Error(data?.error || 'Nao foi possivel salvar.')
       }
 
-      const savedProduct = data.product as SaasProduct
-      setProducts((currentProducts) => {
-        const exists = currentProducts.some((item) => item.id === savedProduct.id)
+      const savedRecord = data.record as SaasOperationRecord
+      setRecords((currentRecords) => {
+        const exists = currentRecords.some((record) => record.id === savedRecord.id)
 
         if (!exists) {
-          return [savedProduct, ...currentProducts]
+          return [savedRecord, ...currentRecords]
         }
 
-        return currentProducts.map((item) =>
-          item.id === savedProduct.id ? savedProduct : item,
+        return currentRecords.map((record) =>
+          record.id === savedRecord.id ? savedRecord : record,
         )
       })
-      setSelectedId(savedProduct.id)
+      setSelectedId(savedRecord.id)
       setFormMode('edit')
-      setFormData(toFormData(savedProduct))
+      setFormData(toFormData(savedRecord))
       setLastUpdated(formatNow())
-      setSuccess('SaaS salvo no banco Neon.')
+      setSuccess('Registro salvo no Neon com dados reais cadastrados.')
     } catch (caughtError) {
       const message =
         caughtError instanceof Error
           ? caughtError.message
-          : 'Não foi possível salvar.'
+          : 'Nao foi possivel salvar.'
       setError(message)
     } finally {
       setIsSaving(false)
     }
   }
 
-  const handleDeleteProduct = async () => {
-    if (!selectedProduct) {
+  const handleDeleteRecord = async () => {
+    if (!selectedRecord) {
       return
     }
 
     const shouldDelete = window.confirm(
-      `Excluir ${selectedProduct.name} do monitoramento?`,
+      `Excluir ${selectedRecord.projectName} da operacao?`,
     )
 
     if (!shouldDelete) {
@@ -279,7 +482,7 @@ export default function AdminDashboard({ username }: AdminDashboardProps) {
 
     try {
       const response = await fetch(
-        `${productsApiPath}/${encodeURIComponent(selectedProduct.id)}`,
+        `${recordsApiPath}/${encodeURIComponent(selectedRecord.id)}`,
         {
           method: 'DELETE',
         },
@@ -287,25 +490,24 @@ export default function AdminDashboard({ username }: AdminDashboardProps) {
       const data = await response.json().catch(() => null)
 
       if (!response.ok) {
-        throw new Error(data?.error || 'Não foi possível excluir o SaaS.')
+        throw new Error(data?.error || 'Nao foi possivel excluir.')
       }
 
-      const remainingProducts = products.filter(
-        (item) => item.id !== selectedProduct.id,
+      const remainingRecords = records.filter(
+        (record) => record.id !== selectedRecord.id,
       )
-      const nextProduct = remainingProducts[0]
-
-      setProducts(remainingProducts)
-      setSelectedId(nextProduct?.id || '')
-      setFormData(nextProduct ? toFormData(nextProduct) : emptyFormData)
-      setFormMode(nextProduct ? 'edit' : 'create')
+      setRecords(remainingRecords)
+      setSelectedId(remainingRecords[0]?.id || '')
+      setFormMode('create')
+      setFormData(emptyFormData)
+      setShowEditor(activePage === 'create')
       setLastUpdated(formatNow())
-      setSuccess('SaaS removido do banco Neon.')
+      setSuccess('Registro removido do Neon.')
     } catch (caughtError) {
       const message =
         caughtError instanceof Error
           ? caughtError.message
-          : 'Não foi possível excluir.'
+          : 'Nao foi possivel excluir.'
       setError(message)
     } finally {
       setIsDeleting(false)
@@ -314,28 +516,36 @@ export default function AdminDashboard({ username }: AdminDashboardProps) {
 
   const handleExport = () => {
     const header = [
-      'SaaS',
       'Cliente',
-      'Segmento',
-      'Plano',
-      'Status',
-      'Uptime',
+      'SaaS',
+      'Etapa',
+      'Responsavel',
+      'Proposta',
+      'Setup',
       'MRR',
-      'Usuários',
+      'Custo',
+      'Saude',
+      'Uptime',
       'Chamados',
-      'Renovação',
+      'Deploy',
+      'Renovacao',
+      'Proxima acao',
     ]
-    const rows = filteredProducts.map((item) => [
-      item.name,
-      item.client,
-      item.segment,
-      item.plan,
-      statusLabels[item.status],
-      `${item.uptime}%`,
-      item.mrr,
-      item.users,
-      item.tickets,
-      item.renewal,
+    const rows = visibleRecords.map((record) => [
+      record.client,
+      record.projectName,
+      stageLabels[record.stage],
+      record.owner,
+      record.proposalValue,
+      record.setupValue,
+      record.monthlyValue,
+      record.costValue,
+      healthLabels[record.health],
+      `${record.uptime}%`,
+      record.tickets,
+      record.deployedAt,
+      record.renewal,
+      record.nextAction,
     ])
 
     const csv = [header, ...rows]
@@ -348,7 +558,7 @@ export default function AdminDashboard({ username }: AdminDashboardProps) {
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
-    link.download = '4m-saas-monitoramento.csv'
+    link.download = '4m-saas-operacao-real.csv'
     link.click()
     URL.revokeObjectURL(url)
   }
@@ -359,6 +569,674 @@ export default function AdminDashboard({ username }: AdminDashboardProps) {
     })
     router.refresh()
   }
+
+  const renderMetrics = () => (
+    <section className={styles.metricsGrid}>
+      <article className={styles.metricCard}>
+        <span>Vendas em aberto</span>
+        <strong>{summary.salesCount}</strong>
+        <p>Leads, propostas e contratos cadastrados</p>
+      </article>
+      <article className={styles.metricCard}>
+        <span>Projetos e deploys</span>
+        <strong>{summary.projectCount}</strong>
+        <p>SaaS em desenvolvimento ou implantacao</p>
+      </article>
+      <article className={styles.metricCard}>
+        <span>MRR real cadastrado</span>
+        <strong>{currencyFormatter.format(summary.totalMrr)}</strong>
+        <p>Receita mensal dos registros no Neon</p>
+      </article>
+      <article className={styles.metricCard}>
+        <span>Alertas</span>
+        <strong>{summary.alertCount}</strong>
+        <p>Prioridade, chamados ou proximas acoes</p>
+      </article>
+    </section>
+  )
+
+  const renderControlBar = () => (
+    <section className={styles.controlBar} aria-label="Filtros do painel">
+      <div className={styles.searchField}>
+        <label htmlFor="search">Buscar cliente, SaaS, segmento ou responsavel</label>
+        <input
+          id="search"
+          type="search"
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          placeholder="Ex.: cliente, SaaS, responsavel..."
+        />
+      </div>
+
+      <div className={styles.statusFilters} role="group" aria-label="Acoes">
+        <button type="button" onClick={handleNewRecord}>
+          Novo registro
+        </button>
+        <button type="button" onClick={handleExport}>
+          Exportar pagina
+        </button>
+      </div>
+    </section>
+  )
+
+  const renderRecordsTable = (
+    title: string,
+    emptyMessage = 'Nenhum registro encontrado para esta pagina.',
+  ) => (
+    <div className={styles.dashboardGrid}>
+      <section className={styles.tablePanel}>
+        <div className={styles.panelHeader}>
+          <div>
+            <p className={styles.kicker}>Dados reais</p>
+            <h2>{title}</h2>
+          </div>
+          <button
+            type="button"
+            className={styles.secondaryButton}
+            onClick={handleNewRecord}
+          >
+            Novo registro
+          </button>
+        </div>
+
+        {isLoading ? (
+          <div className={styles.loadingState}>Carregando dados do Neon...</div>
+        ) : visibleRecords.length === 0 ? (
+          <div className={styles.emptyState}>{emptyMessage}</div>
+        ) : (
+          <div className={styles.tableWrap}>
+            <table>
+              <thead>
+                <tr>
+                  <th>Cliente / SaaS</th>
+                  <th>Etapa</th>
+                  <th>Responsavel</th>
+                  <th>Proposta</th>
+                  <th>Setup</th>
+                  <th>MRR</th>
+                  <th>Saude</th>
+                  <th>Proxima acao</th>
+                </tr>
+              </thead>
+              <tbody>
+                {visibleRecords.map((record) => (
+                  <tr
+                    key={record.id}
+                    className={
+                      selectedRecord?.id === record.id ? styles.selectedRow : ''
+                    }
+                    onClick={() => handleSelectRecord(record)}
+                  >
+                    <td>
+                      <strong>{record.client}</strong>
+                      <span>{record.projectName}</span>
+                    </td>
+                    <td>
+                      <span className={`${styles.statusBadge} ${styles.stage}`}>
+                        {stageLabels[record.stage]}
+                      </span>
+                    </td>
+                    <td>{record.owner || 'Sem responsavel'}</td>
+                    <td>{currencyFormatter.format(record.proposalValue)}</td>
+                    <td>{currencyFormatter.format(record.setupValue)}</td>
+                    <td>{currencyFormatter.format(record.monthlyValue)}</td>
+                    <td>
+                      <span
+                        className={`${styles.statusBadge} ${
+                          styles[record.health]
+                        }`}
+                      >
+                        {healthLabels[record.health]}
+                      </span>
+                    </td>
+                    <td>{record.nextAction || 'Sem acao registrada'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
+
+      {renderDetailPanel()}
+    </div>
+  )
+
+  const renderDetailPanel = () => (
+    <aside className={styles.detailPanel}>
+      <div className={styles.panelHeader}>
+        <div>
+          <p className={styles.kicker}>Registro selecionado</p>
+          <h2>{selectedRecord?.projectName || 'Nenhum registro selecionado'}</h2>
+        </div>
+        {selectedRecord && (
+          <span className={`${styles.statusBadge} ${styles.stage}`}>
+            {stageLabels[selectedRecord.stage]}
+          </span>
+        )}
+      </div>
+
+      {selectedRecord ? (
+        <>
+          <div className={styles.detailRows}>
+            <div>
+              <span>Cliente</span>
+              <strong>{selectedRecord.client}</strong>
+            </div>
+            <div>
+              <span>Contato</span>
+              <strong>
+                {selectedRecord.contactName || 'Sem nome'}{' '}
+                {selectedRecord.contactPhone
+                  ? `- ${selectedRecord.contactPhone}`
+                  : ''}
+              </strong>
+            </div>
+            <div>
+              <span>Valores</span>
+              <strong>
+                Setup {currencyFormatter.format(selectedRecord.setupValue)} / MRR{' '}
+                {currencyFormatter.format(selectedRecord.monthlyValue)}
+              </strong>
+            </div>
+            <div>
+              <span>Datas</span>
+              <strong>
+                Venda {selectedRecord.saleDate || 'sem data'} / Deploy{' '}
+                {selectedRecord.deployedAt || 'sem data'}
+              </strong>
+            </div>
+            <div>
+              <span>Proxima acao</span>
+              <strong>{selectedRecord.nextAction || 'Sem acao registrada'}</strong>
+            </div>
+          </div>
+
+          <div className={styles.healthBar} aria-label="Uptime do SaaS">
+            <span>Uptime em operacao</span>
+            <strong>{selectedRecord.uptime.toFixed(2)}%</strong>
+            <div>
+              <i style={{ width: `${selectedRecord.uptime}%` }} />
+            </div>
+          </div>
+
+          <div className={styles.detailActions}>
+            <button
+              type="button"
+              className={styles.secondaryButton}
+              onClick={() => handleStartEdit(selectedRecord)}
+            >
+              Editar
+            </button>
+            <button
+              type="button"
+              className={styles.dangerButton}
+              onClick={handleDeleteRecord}
+              disabled={isDeleting}
+            >
+              {isDeleting ? 'Excluindo...' : 'Excluir'}
+            </button>
+          </div>
+        </>
+      ) : (
+        <div className={styles.emptyState}>Cadastre o primeiro registro real.</div>
+      )}
+    </aside>
+  )
+
+  const renderOverview = () => (
+    <>
+      <section className={styles.metricsGrid}>
+        <article className={styles.metricCard}>
+          <span>Setup vendido</span>
+          <strong>{currencyFormatter.format(summary.totalSetup)}</strong>
+          <p>Valor de implantacao cadastrado</p>
+        </article>
+        <article className={styles.metricCard}>
+          <span>MRR cadastrado</span>
+          <strong>{currencyFormatter.format(summary.totalMrr)}</strong>
+          <p>Receita recorrente mensal real</p>
+        </article>
+        <article className={styles.metricCard}>
+          <span>Custo mensal</span>
+          <strong>{currencyFormatter.format(summary.totalCost)}</strong>
+          <p>Custos informados pela operacao</p>
+        </article>
+        <article className={styles.metricCard}>
+          <span>Uptime medio</span>
+          <strong>{summary.averageUptime.toFixed(2)}%</strong>
+          <p>Somente SaaS em operacao</p>
+        </article>
+      </section>
+
+      <section className={styles.stageBoard}>
+        {stageOptions.map((stage) => {
+          const stageRecords = records.filter((record) => record.stage === stage)
+
+          return (
+            <article key={stage} className={styles.stageCard}>
+              <span>{stageLabels[stage]}</span>
+              <strong>{stageRecords.length}</strong>
+              <p>
+                {currencyFormatter.format(
+                  stageRecords.reduce(
+                    (sum, record) => sum + record.monthlyValue,
+                    0,
+                  ),
+                )}{' '}
+                de MRR
+              </p>
+            </article>
+          )
+        })}
+      </section>
+
+      {renderRecordsTable('Ultimos registros da operacao')}
+    </>
+  )
+
+  const renderFinance = () => (
+    <>
+      <section className={styles.metricsGrid}>
+        <article className={styles.metricCard}>
+          <span>Propostas em carteira</span>
+          <strong>{currencyFormatter.format(summary.totalProposal)}</strong>
+          <p>Soma dos valores de proposta cadastrados</p>
+        </article>
+        <article className={styles.metricCard}>
+          <span>Setup vendido</span>
+          <strong>{currencyFormatter.format(summary.totalSetup)}</strong>
+          <p>Valor de implantacao cadastrado</p>
+        </article>
+        <article className={styles.metricCard}>
+          <span>MRR</span>
+          <strong>{currencyFormatter.format(summary.totalMrr)}</strong>
+          <p>Receita recorrente mensal real</p>
+        </article>
+        <article className={styles.metricCard}>
+          <span>Margem mensal informada</span>
+          <strong>
+            {currencyFormatter.format(summary.totalMrr - summary.totalCost)}
+          </strong>
+          <p>MRR menos custos cadastrados</p>
+        </article>
+      </section>
+      {renderRecordsTable('Valores por cliente')}
+    </>
+  )
+
+  const renderEditor = () => (
+    <section className={styles.editorPanel} id="registro-operacional">
+      <div className={styles.panelHeader}>
+        <div>
+          <p className={styles.kicker}>
+            {formMode === 'create' ? 'Novo registro' : 'Edicao'}
+          </p>
+          <h2>
+            {formMode === 'create'
+              ? 'Cadastrar operacao real'
+              : `Editar ${formData.projectName || 'registro'}`}
+          </h2>
+        </div>
+        <button
+          type="button"
+          className={styles.secondaryButton}
+          onClick={handleNewRecord}
+        >
+          Limpar formulario
+        </button>
+      </div>
+
+      <form className={styles.editorForm} onSubmit={handleSaveRecord}>
+        <div className={styles.formGrid}>
+          <div>
+            <label htmlFor="operation-id">ID interno</label>
+            <input
+              id="operation-id"
+              type="text"
+              value={formData.id}
+              onChange={(event) => updateFormData('id', event.target.value)}
+              placeholder="gerado automaticamente se vazio"
+              disabled={formMode === 'edit'}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="client">Cliente *</label>
+            <input
+              id="client"
+              type="text"
+              value={formData.client}
+              onChange={(event) => updateFormData('client', event.target.value)}
+              required
+            />
+          </div>
+
+          <div>
+            <label htmlFor="projectName">Nome do SaaS/projeto *</label>
+            <input
+              id="projectName"
+              type="text"
+              value={formData.projectName}
+              onChange={(event) =>
+                updateFormData('projectName', event.target.value)
+              }
+              required
+            />
+          </div>
+
+          <div>
+            <label htmlFor="contactName">Contato principal</label>
+            <input
+              id="contactName"
+              type="text"
+              value={formData.contactName}
+              onChange={(event) =>
+                updateFormData('contactName', event.target.value)
+              }
+            />
+          </div>
+
+          <div>
+            <label htmlFor="contactPhone">WhatsApp</label>
+            <input
+              id="contactPhone"
+              type="tel"
+              value={formData.contactPhone}
+              onChange={(event) =>
+                updateFormData('contactPhone', event.target.value)
+              }
+            />
+          </div>
+
+          <div>
+            <label htmlFor="contactEmail">E-mail</label>
+            <input
+              id="contactEmail"
+              type="email"
+              value={formData.contactEmail}
+              onChange={(event) =>
+                updateFormData('contactEmail', event.target.value)
+              }
+            />
+          </div>
+
+          <div>
+            <label htmlFor="segment">Segmento</label>
+            <input
+              id="segment"
+              type="text"
+              value={formData.segment}
+              onChange={(event) => updateFormData('segment', event.target.value)}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="source">Origem da venda</label>
+            <input
+              id="source"
+              type="text"
+              value={formData.source}
+              onChange={(event) => updateFormData('source', event.target.value)}
+              placeholder="Site, indicacao, outbound..."
+            />
+          </div>
+
+          <div>
+            <label htmlFor="owner">Responsavel</label>
+            <input
+              id="owner"
+              type="text"
+              value={formData.owner}
+              onChange={(event) => updateFormData('owner', event.target.value)}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="stage">Etapa</label>
+            <select
+              id="stage"
+              value={formData.stage}
+              onChange={(event) =>
+                updateFormData('stage', event.target.value as OperationStage)
+              }
+            >
+              {stageOptions.map((stage) => (
+                <option key={stage} value={stage}>
+                  {stageLabels[stage]}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="priority">Prioridade</label>
+            <select
+              id="priority"
+              value={formData.priority}
+              onChange={(event) =>
+                updateFormData(
+                  'priority',
+                  event.target.value as OperationPriority,
+                )
+              }
+            >
+              {priorityOptions.map((priority) => (
+                <option key={priority} value={priority}>
+                  {priority}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="health">Saude operacional</label>
+            <select
+              id="health"
+              value={formData.health}
+              onChange={(event) =>
+                updateFormData('health', event.target.value as OperationHealth)
+              }
+            >
+              {healthOptions.map((health) => (
+                <option key={health} value={health}>
+                  {healthLabels[health]}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="proposalValue">Valor da proposta (R$)</label>
+            <input
+              id="proposalValue"
+              type="number"
+              min="0"
+              value={formData.proposalValue}
+              onChange={(event) =>
+                updateFormData('proposalValue', Number(event.target.value))
+              }
+            />
+          </div>
+
+          <div>
+            <label htmlFor="setupValue">Setup / implantacao (R$)</label>
+            <input
+              id="setupValue"
+              type="number"
+              min="0"
+              value={formData.setupValue}
+              onChange={(event) =>
+                updateFormData('setupValue', Number(event.target.value))
+              }
+            />
+          </div>
+
+          <div>
+            <label htmlFor="monthlyValue">MRR mensal (R$)</label>
+            <input
+              id="monthlyValue"
+              type="number"
+              min="0"
+              value={formData.monthlyValue}
+              onChange={(event) =>
+                updateFormData('monthlyValue', Number(event.target.value))
+              }
+            />
+          </div>
+
+          <div>
+            <label htmlFor="costValue">Custo mensal (R$)</label>
+            <input
+              id="costValue"
+              type="number"
+              min="0"
+              value={formData.costValue}
+              onChange={(event) =>
+                updateFormData('costValue', Number(event.target.value))
+              }
+            />
+          </div>
+
+          <div>
+            <label htmlFor="users">Usuarios reais</label>
+            <input
+              id="users"
+              type="number"
+              min="0"
+              value={formData.users}
+              onChange={(event) => updateFormData('users', Number(event.target.value))}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="tickets">Chamados abertos</label>
+            <input
+              id="tickets"
+              type="number"
+              min="0"
+              value={formData.tickets}
+              onChange={(event) =>
+                updateFormData('tickets', Number(event.target.value))
+              }
+            />
+          </div>
+
+          <div>
+            <label htmlFor="uptime">Uptime (%)</label>
+            <input
+              id="uptime"
+              type="number"
+              min="0"
+              max="100"
+              step="0.01"
+              value={formData.uptime}
+              onChange={(event) =>
+                updateFormData('uptime', Number(event.target.value))
+              }
+            />
+          </div>
+
+          <div>
+            <label htmlFor="saleDate">Data da venda</label>
+            <input
+              id="saleDate"
+              type="date"
+              value={formData.saleDate}
+              onChange={(event) => updateFormData('saleDate', event.target.value)}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="contractDate">Data do contrato</label>
+            <input
+              id="contractDate"
+              type="date"
+              value={formData.contractDate}
+              onChange={(event) =>
+                updateFormData('contractDate', event.target.value)
+              }
+            />
+          </div>
+
+          <div>
+            <label htmlFor="expectedDeploy">Deploy previsto</label>
+            <input
+              id="expectedDeploy"
+              type="date"
+              value={formData.expectedDeploy}
+              onChange={(event) =>
+                updateFormData('expectedDeploy', event.target.value)
+              }
+            />
+          </div>
+
+          <div>
+            <label htmlFor="deployedAt">Deploy real</label>
+            <input
+              id="deployedAt"
+              type="date"
+              value={formData.deployedAt}
+              onChange={(event) =>
+                updateFormData('deployedAt', event.target.value)
+              }
+            />
+          </div>
+
+          <div>
+            <label htmlFor="renewal">Renovacao</label>
+            <input
+              id="renewal"
+              type="date"
+              value={formData.renewal}
+              onChange={(event) => updateFormData('renewal', event.target.value)}
+            />
+          </div>
+
+          <div className={styles.fullField}>
+            <label htmlFor="nextAction">Proxima acao real</label>
+            <input
+              id="nextAction"
+              type="text"
+              value={formData.nextAction}
+              onChange={(event) =>
+                updateFormData('nextAction', event.target.value)
+              }
+              placeholder="Ex.: enviar contrato, validar homologacao, cobrar retorno..."
+            />
+          </div>
+
+          <div className={styles.fullField}>
+            <label htmlFor="notes">Observacoes operacionais</label>
+            <textarea
+              id="notes"
+              value={formData.notes}
+              onChange={(event) => updateFormData('notes', event.target.value)}
+              rows={4}
+              placeholder="Registre somente informacoes reais da operacao."
+            />
+          </div>
+        </div>
+
+        <div className={styles.formActions}>
+          <button
+            type="submit"
+            className={styles.primaryButton}
+            disabled={isSaving}
+          >
+            {isSaving ? 'Salvando...' : 'Salvar no Neon'}
+          </button>
+          <button
+            type="button"
+            className={styles.secondaryButton}
+            onClick={handleNewRecord}
+          >
+            Novo registro
+          </button>
+        </div>
+      </form>
+    </section>
+  )
 
   return (
     <main className={styles.shell}>
@@ -371,37 +1249,37 @@ export default function AdminDashboard({ username }: AdminDashboardProps) {
           <span>Painel 4M</span>
         </a>
 
-        <nav className={styles.nav} aria-label="Navegação administrativa">
-          <a className={styles.activeNav} href="#overview">
-            Visão geral
-          </a>
-          <a href="#saas">SaaS monitorados</a>
-          <a href="#cadastro">Cadastro</a>
-          <a href="#alertas">Alertas</a>
+        <nav className={styles.nav} aria-label="Navegacao administrativa">
+          {navItems.map((item) => (
+            <Link
+              key={item.page}
+              className={activePage === item.page ? styles.activeNav : ''}
+              href={item.href}
+            >
+              {item.label}
+            </Link>
+          ))}
         </nav>
 
         <div className={styles.operatorBox}>
-          <span>Operação</span>
+          <span>Operacao real</span>
           <strong>4M SaaS Control</strong>
-          <p>Dados persistidos no banco Neon conectado ao painel.</p>
+          <p>Sem dados ficticios: tudo exibido vem dos formularios e do Neon.</p>
         </div>
       </aside>
 
       <section className={styles.workspace}>
         <header className={styles.topbar}>
           <div>
-            <p className={styles.kicker}>Administração interna</p>
-            <h1>Monitoramento dos SaaS fornecidos pela 4M</h1>
-            <p className={styles.subtitle}>
-              Acompanhe saúde, receita, chamados, renovações e responsáveis por
-              cada plataforma com dados vindos do banco Neon.
-            </p>
+            <p className={styles.kicker}>{copy.kicker}</p>
+            <h1>{copy.title}</h1>
+            <p className={styles.subtitle}>{copy.subtitle}</p>
           </div>
 
           <div className={styles.topbarActions}>
-            <span>Sessão: {username}</span>
+            <span>Sessao: {username}</span>
             <span>Atualizado: {lastUpdated}</span>
-            <button type="button" onClick={loadProducts} disabled={isLoading}>
+            <button type="button" onClick={loadRecords} disabled={isLoading}>
               {isLoading ? 'Carregando...' : 'Atualizar'}
             </button>
             <button type="button" onClick={handleExport}>
@@ -420,476 +1298,22 @@ export default function AdminDashboard({ username }: AdminDashboardProps) {
           </div>
         )}
 
-        <section className={styles.metricsGrid} id="overview">
-          <article className={styles.metricCard}>
-            <span>SaaS ativos</span>
-            <strong>{products.length}</strong>
-            <p>{summary.criticalCount} precisam de atenção hoje</p>
-          </article>
-          <article className={styles.metricCard}>
-            <span>Receita mensal monitorada</span>
-            <strong>{currencyFormatter.format(summary.totalMrr)}</strong>
-            <p>MRR cadastrado da carteira SaaS</p>
-          </article>
-          <article className={styles.metricCard}>
-            <span>Uptime médio</span>
-            <strong>{summary.averageUptime.toFixed(2)}%</strong>
-            <p>Base dos produtos cadastrados</p>
-          </article>
-          <article className={styles.metricCard}>
-            <span>Chamados abertos</span>
-            <strong>{summary.totalTickets}</strong>
-            <p>Demandas pendentes com a equipe</p>
-          </article>
-        </section>
+        {activePage !== 'overview' && activePage !== 'finance' && renderMetrics()}
+        {activePage !== 'create' && renderControlBar()}
 
-        <section className={styles.controlBar} aria-label="Filtros do painel">
-          <div className={styles.searchField}>
-            <label htmlFor="search">Buscar SaaS, cliente ou segmento</label>
-            <input
-              id="search"
-              type="search"
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Ex.: Limpfy, CRM, estética..."
-            />
-          </div>
+        {activePage === 'overview' && renderOverview()}
+        {activePage === 'sales' &&
+          renderRecordsTable('Leads, propostas e contratos')}
+        {activePage === 'projects' &&
+          renderRecordsTable('Projetos em desenvolvimento')}
+        {activePage === 'deploy' &&
+          renderRecordsTable('Deploys e implantacoes')}
+        {activePage === 'saas' && renderRecordsTable('SaaS em operacao')}
+        {activePage === 'finance' && renderFinance()}
+        {activePage === 'alerts' &&
+          renderRecordsTable('Alertas e proximas acoes', 'Nenhum alerta aberto.')}
 
-          <div className={styles.statusFilters} role="group" aria-label="Status">
-            {statusOrder.map((status) => (
-              <button
-                key={status}
-                type="button"
-                className={statusFilter === status ? styles.activeFilter : ''}
-                onClick={() => setStatusFilter(status)}
-              >
-                {statusLabels[status]}
-              </button>
-            ))}
-          </div>
-        </section>
-
-        <div className={styles.dashboardGrid}>
-          <section className={styles.tablePanel} id="saas">
-            <div className={styles.panelHeader}>
-              <div>
-                <p className={styles.kicker}>Carteira SaaS</p>
-                <h2>Produtos em operação</h2>
-              </div>
-              <button
-                type="button"
-                className={styles.secondaryButton}
-                onClick={handleNewProduct}
-              >
-                Novo SaaS
-              </button>
-            </div>
-
-            {isLoading ? (
-              <div className={styles.loadingState}>Carregando dados do Neon...</div>
-            ) : filteredProducts.length === 0 ? (
-              <div className={styles.emptyState}>
-                Nenhum SaaS encontrado para os filtros atuais.
-              </div>
-            ) : (
-              <div className={styles.tableWrap}>
-                <table>
-                  <thead>
-                    <tr>
-                      <th>SaaS</th>
-                      <th>Cliente</th>
-                      <th>Status</th>
-                      <th>Uptime</th>
-                      <th>MRR</th>
-                      <th>Chamados</th>
-                      <th>Renovação</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredProducts.map((item) => (
-                      <tr
-                        key={item.id}
-                        className={
-                          selectedProduct?.id === item.id
-                            ? styles.selectedRow
-                            : ''
-                        }
-                        onClick={() => handleSelectProduct(item)}
-                      >
-                        <td>
-                          <strong>{item.name}</strong>
-                          <span>{item.plan}</span>
-                        </td>
-                        <td>{item.client}</td>
-                        <td>
-                          <span
-                            className={`${styles.statusBadge} ${
-                              styles[item.status]
-                            }`}
-                          >
-                            {statusLabels[item.status]}
-                          </span>
-                        </td>
-                        <td>{item.uptime.toFixed(2)}%</td>
-                        <td>{currencyFormatter.format(item.mrr)}</td>
-                        <td>{item.tickets}</td>
-                        <td>{item.renewal || 'Sem data'}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </section>
-
-          <aside className={styles.detailPanel} id="clientes">
-            <div className={styles.panelHeader}>
-              <div>
-                <p className={styles.kicker}>Detalhe do cliente</p>
-                <h2>{selectedProduct?.name || 'Nenhum SaaS selecionado'}</h2>
-              </div>
-              {selectedProduct && (
-                <span
-                  className={`${styles.statusBadge} ${
-                    styles[selectedProduct.status]
-                  }`}
-                >
-                  {statusLabels[selectedProduct.status]}
-                </span>
-              )}
-            </div>
-
-            {selectedProduct ? (
-              <>
-                <div className={styles.detailRows}>
-                  <div>
-                    <span>Cliente</span>
-                    <strong>{selectedProduct.client}</strong>
-                  </div>
-                  <div>
-                    <span>Segmento</span>
-                    <strong>{selectedProduct.segment}</strong>
-                  </div>
-                  <div>
-                    <span>Responsável</span>
-                    <strong>{selectedProduct.owner}</strong>
-                  </div>
-                  <div>
-                    <span>Prioridade</span>
-                    <strong>{selectedProduct.priority}</strong>
-                  </div>
-                  <div>
-                    <span>Último deploy</span>
-                    <strong>{selectedProduct.lastDeploy || 'Sem registro'}</strong>
-                  </div>
-                  <div>
-                    <span>Próxima renovação</span>
-                    <strong>{selectedProduct.renewal || 'Sem data'}</strong>
-                  </div>
-                </div>
-
-                <div className={styles.healthBar} aria-label="Uptime do SaaS">
-                  <span>Uptime</span>
-                  <strong>{selectedProduct.uptime.toFixed(2)}%</strong>
-                  <div>
-                    <i style={{ width: `${selectedProduct.uptime}%` }} />
-                  </div>
-                </div>
-
-                <div className={styles.detailActions}>
-                  <button
-                    type="button"
-                    className={styles.secondaryButton}
-                    onClick={() => handleSelectProduct(selectedProduct)}
-                  >
-                    Editar
-                  </button>
-                  <button
-                    type="button"
-                    className={styles.dangerButton}
-                    onClick={handleDeleteProduct}
-                    disabled={isDeleting}
-                  >
-                    {isDeleting ? 'Excluindo...' : 'Excluir'}
-                  </button>
-                </div>
-              </>
-            ) : (
-              <div className={styles.emptyState}>Cadastre o primeiro SaaS.</div>
-            )}
-          </aside>
-        </div>
-
-        <section className={styles.editorPanel} id="cadastro">
-          <div className={styles.panelHeader}>
-            <div>
-              <p className={styles.kicker}>
-                {formMode === 'create' ? 'Novo registro' : 'Edição'}
-              </p>
-              <h2>
-                {formMode === 'create'
-                  ? 'Cadastrar SaaS no Neon'
-                  : `Editar ${formData.name || 'SaaS'}`}
-              </h2>
-            </div>
-            <button
-              type="button"
-              className={styles.secondaryButton}
-              onClick={handleNewProduct}
-            >
-              Limpar formulário
-            </button>
-          </div>
-
-          <form className={styles.editorForm} onSubmit={handleSaveProduct}>
-            <div className={styles.formGrid}>
-              <div>
-                <label htmlFor="saas-id">ID interno</label>
-                <input
-                  id="saas-id"
-                  type="text"
-                  value={formData.id}
-                  onChange={(event) => updateFormData('id', event.target.value)}
-                  placeholder="gerado automaticamente se vazio"
-                  disabled={formMode === 'edit'}
-                />
-              </div>
-
-              <div>
-                <label htmlFor="saas-name">Nome do SaaS *</label>
-                <input
-                  id="saas-name"
-                  type="text"
-                  value={formData.name}
-                  onChange={(event) => updateFormData('name', event.target.value)}
-                  required
-                />
-              </div>
-
-              <div>
-                <label htmlFor="saas-client">Cliente *</label>
-                <input
-                  id="saas-client"
-                  type="text"
-                  value={formData.client}
-                  onChange={(event) =>
-                    updateFormData('client', event.target.value)
-                  }
-                  required
-                />
-              </div>
-
-              <div>
-                <label htmlFor="saas-segment">Segmento *</label>
-                <input
-                  id="saas-segment"
-                  type="text"
-                  value={formData.segment}
-                  onChange={(event) =>
-                    updateFormData('segment', event.target.value)
-                  }
-                  required
-                />
-              </div>
-
-              <div>
-                <label htmlFor="saas-plan">Plano *</label>
-                <input
-                  id="saas-plan"
-                  type="text"
-                  value={formData.plan}
-                  onChange={(event) => updateFormData('plan', event.target.value)}
-                  required
-                />
-              </div>
-
-              <div>
-                <label htmlFor="saas-owner">Responsável</label>
-                <input
-                  id="saas-owner"
-                  type="text"
-                  value={formData.owner}
-                  onChange={(event) => updateFormData('owner', event.target.value)}
-                />
-              </div>
-
-              <div>
-                <label htmlFor="saas-status">Status</label>
-                <select
-                  id="saas-status"
-                  value={formData.status}
-                  onChange={(event) =>
-                    updateFormData('status', event.target.value as SaasStatus)
-                  }
-                >
-                  {statusOptions.map((status) => (
-                    <option key={status} value={status}>
-                      {statusLabels[status]}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label htmlFor="saas-priority">Prioridade</label>
-                <select
-                  id="saas-priority"
-                  value={formData.priority}
-                  onChange={(event) =>
-                    updateFormData('priority', event.target.value as SaasPriority)
-                  }
-                >
-                  {priorityOptions.map((priority) => (
-                    <option key={priority} value={priority}>
-                      {priority}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label htmlFor="saas-uptime">Uptime (%)</label>
-                <input
-                  id="saas-uptime"
-                  type="number"
-                  min="0"
-                  max="100"
-                  step="0.01"
-                  value={formData.uptime}
-                  onChange={(event) =>
-                    updateFormData('uptime', Number(event.target.value))
-                  }
-                />
-              </div>
-
-              <div>
-                <label htmlFor="saas-mrr">MRR (R$)</label>
-                <input
-                  id="saas-mrr"
-                  type="number"
-                  min="0"
-                  value={formData.mrr}
-                  onChange={(event) =>
-                    updateFormData('mrr', Number(event.target.value))
-                  }
-                />
-              </div>
-
-              <div>
-                <label htmlFor="saas-users">Usuários</label>
-                <input
-                  id="saas-users"
-                  type="number"
-                  min="0"
-                  value={formData.users}
-                  onChange={(event) =>
-                    updateFormData('users', Number(event.target.value))
-                  }
-                />
-              </div>
-
-              <div>
-                <label htmlFor="saas-tickets">Chamados abertos</label>
-                <input
-                  id="saas-tickets"
-                  type="number"
-                  min="0"
-                  value={formData.tickets}
-                  onChange={(event) =>
-                    updateFormData('tickets', Number(event.target.value))
-                  }
-                />
-              </div>
-
-              <div>
-                <label htmlFor="saas-deploy">Último deploy</label>
-                <input
-                  id="saas-deploy"
-                  type="text"
-                  value={formData.lastDeploy}
-                  onChange={(event) =>
-                    updateFormData('lastDeploy', event.target.value)
-                  }
-                  placeholder="Ex.: 09 jun 2026, 09:12"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="saas-renewal">Renovação</label>
-                <input
-                  id="saas-renewal"
-                  type="text"
-                  value={formData.renewal}
-                  onChange={(event) =>
-                    updateFormData('renewal', event.target.value)
-                  }
-                  placeholder="Ex.: 30 jun 2026"
-                />
-              </div>
-            </div>
-
-            <div className={styles.formActions}>
-              <button
-                type="submit"
-                className={styles.primaryButton}
-                disabled={isSaving}
-              >
-                {isSaving ? 'Salvando...' : 'Salvar no Neon'}
-              </button>
-              <button
-                type="button"
-                className={styles.secondaryButton}
-                onClick={handleNewProduct}
-              >
-                Novo cadastro
-              </button>
-            </div>
-          </form>
-        </section>
-
-        <section className={styles.alertPanel} id="alertas">
-          <div className={styles.panelHeader}>
-            <div>
-              <p className={styles.kicker}>Fila de atenção</p>
-              <h2>Alertas que precisam de acompanhamento</h2>
-            </div>
-            <span>{summary.criticalCount} alertas</span>
-          </div>
-
-          <div className={styles.alertList}>
-            {products.filter((item) => item.status !== 'online').length === 0 ? (
-              <div className={styles.emptyState}>
-                Nenhum alerta aberto neste momento.
-              </div>
-            ) : (
-              products
-                .filter((item) => item.status !== 'online')
-                .map((item) => (
-                  <article key={item.id}>
-                    <span
-                      className={`${styles.statusBadge} ${styles[item.status]}`}
-                    >
-                      {statusLabels[item.status]}
-                    </span>
-                    <div>
-                      <strong>{item.name}</strong>
-                      <p>
-                        {item.client} tem {item.tickets} chamado(s) aberto(s),
-                        uptime de {item.uptime.toFixed(2)}% e prioridade{' '}
-                        {item.priority.toLowerCase()}.
-                      </p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => handleSelectProduct(item)}
-                    >
-                      Ver detalhes
-                    </button>
-                  </article>
-                ))
-            )}
-          </div>
-        </section>
+        {(showEditor || activePage === 'create') && renderEditor()}
       </section>
     </main>
   )
